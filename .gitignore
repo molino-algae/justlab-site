@@ -1,0 +1,20 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# local env
+.env
+.env.production
+.env.local
+
+# editor / os
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# local sync scratch
+.sync-cache/

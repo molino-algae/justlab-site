@@ -1,0 +1,68 @@
+---
+import Base from "../layouts/Base.astro";
+import SectionHead from "../components/SectionHead.astro";
+---
+
+<Base
+  title="Infrastructure"
+  description="Equipment and facilities at the JUST Lab, EEL/USP."
+>
+  <section class="wrap">
+    <SectionHead
+      kicker="Infrastructure"
+      title="Equipment and facilities"
+      lead="The JUST Lab is hosted in the Department of Biotechnology (DEBIQ) at EEL/USP in Lorena. This page is being populated with photos and specifications."
+    />
+  </section>
+
+  <section class="wrap">
+    <div class="grid">
+      <div class="card">
+        <h3>Cultivation</h3>
+        <p>
+          Indoor carboy and flask cultures, closed photobioreactors including the
+          3D-printed modular reactor, and outdoor raceway ponds for scale-up.
+        </p>
+        <p class="mono todo">TODO: photos + specs</p>
+      </div>
+      <div class="card">
+        <h3>Molecular biology</h3>
+        <p>Transformation, cloning, and screening equipment.</p>
+        <p class="mono todo">TODO</p>
+      </div>
+      <div class="card">
+        <h3>Downstream &amp; analytics</h3>
+        <p>
+          Bioseparations and formulation via the Laboratory of Biosseparations and
+          Nanoformulations; chromatography, electrophoresis, spectroscopy.
+        </p>
+        <p class="mono todo">TODO</p>
+      </div>
+      <div class="card">
+        <h3>Shared USP facilities</h3>
+        <p>Core facilities at EEL/USP accessible to the lab.</p>
+        <p class="mono todo">TODO</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+  .card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  .card p {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+  }
+  .todo {
+    color: var(--gold);
+    font-size: 0.66rem;
+  }
+</style>

@@ -1,0 +1,127 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../layouts/Base.astro";
+import SectionHead from "../components/SectionHead.astro";
+import { site, publications } from "../lib/data";
+
+const areas = (await getCollection("research")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const people = await getCollection("people");
+const rendered = await Promise.all(
+  areas.map(async (a) => ({ area: a, Content: (await render(a)).Content })),
+);
+---
+
+<Base title="Research" description="The four research areas of the JUST Lab.">
+  <section class="wrap">
+    <SectionHead
+      kicker="Research"
+      title="Microalgae, from molecular tools to sustainable products"
+      lead={site.description}
+    />
+  </section>
+
+  {
+    rendered.map(({ area, Content }) => {
+      const d = area.data;
+      const members = people.filter((p) => p.data.areas.includes(d.slug));
+      const papers = publications.filter((p) =>
+        (p.areas ?? []).includes(d.slug),
+      );
+      return (
+        <section class="wrap area" id={d.slug}>
+          <span class="mono num">0{d.order}</span>
+          <h2>{d.title}</h2>
+          <div class="prose body">
+            <Content />
+          </div>
+          {members.length > 0 && (
+            <p class="line">
+              <span class="mono">Who</span>
+              {members.map((m, i) => (
+                <>
+                  {i > 0 ? ", " : " "}
+                  {m.data.name}
+                </>
+              ))}
+            </p>
+          )}
+          {papers.length > 0 && (
+            <ul class="papers">
+              {papers.map((p) => (
+                <li>
+                  <a href={`https://doi.org/${p.doi}`}>{p.title}</a>{" "}
+                  <span class="meta">
+                    <i>{p.venue}</i> {p.year}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      );
+    })
+  }
+
+  {
+    site.openScience && (
+      <section class="wrap os">
+        <span class="kicker mono">Cross-cutting</span>
+        <h2>Open science &amp; open hardware</h2>
+        <p class="prose">
+          Reproducible protocols and openly documented low-cost equipment run
+          through every area — including the lab's 3D-printed modular
+          photobioreactor and related builds. Designs, data, and code are shared
+          openly.
+        </p>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .area {
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+    border-top: 1px solid var(--line);
+  }
+  .area .num {
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+  .area h2 {
+    font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+    max-width: 24ch;
+  }
+  .body {
+    margin-top: 1rem;
+    color: var(--ink-soft);
+  }
+  .line {
+    margin-top: 1.2rem;
+    font-size: 0.92rem;
+  }
+  .line .mono {
+    color: var(--accent);
+    margin-right: 0.4rem;
+  }
+  .papers {
+    list-style: none;
+    padding: 0;
+    margin: 1.4rem 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .papers li {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .papers .meta {
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+  }
+  .os {
+    border-top: 1px solid var(--line);
+  }
+</style>

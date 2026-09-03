@@ -1,0 +1,252 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import HeroCanvas from "../components/HeroCanvas.astro";
+import SectionHead from "../components/SectionHead.astro";
+import PersonCard from "../components/PersonCard.astro";
+import { site, publications } from "../lib/data";
+
+const research = (await getCollection("research")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const news = (await getCollection("news")).sort(
+  (a, b) => +b.data.date - +a.data.date,
+);
+const people = (await getCollection("people")).filter((p) =>
+  ["pi", "collaborator", "undergrad", "grad", "researcher"].includes(
+    p.data.category,
+  ),
+);
+const featured = publications.filter((p) => p.featured).slice(0, 4);
+const spotlight = featured[0];
+---
+
+<Base heroNav={true}>
+  <HeroCanvas />
+
+  <section class="wrap">
+    <SectionHead
+      kicker="What we do"
+      title="From a designed gene to a running bioprocess"
+      lead={site.description}
+    />
+    <div class="areas">
+      {
+        research.map((r) => (
+          <a class="area" href={`/research#${r.data.slug}`}>
+            <span class="mono">0{r.data.order}</span>
+            <h3>{r.data.title}</h3>
+            <p>{r.data.summary}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    spotlight && (
+      <section class="wrap spotlight-wrap">
+        <div class="spotlight">
+          <span class="kicker mono">Featured work</span>
+          <h2>{spotlight.title}</h2>
+          <p class="authors">{spotlight.authors}</p>
+          <p class="prose">{spotlight.highlight}</p>
+          <p>
+            <a href={`https://doi.org/${spotlight.doi}`}>
+              {spotlight.venue} ({spotlight.year}) · DOI {spotlight.doi} →
+            </a>
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="wrap">
+    <SectionHead kicker="Selected publications" title="Recent work from the lab" />
+    <ul class="pubs">
+      {
+        featured.map((p) => (
+          <li>
+            <a href={`https://doi.org/${p.doi}`}>{p.title}</a>
+            <p class="meta">
+              {p.authors} · <i>{p.venue}</i> {p.year}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+    <p><a href="/publications">All publications →</a></p>
+  </section>
+
+  {
+    news.length > 0 && (
+      <section class="wrap">
+        <SectionHead kicker="News" title="Latest from the lab" />
+        <ul class="news">
+          {news.slice(0, 3).map((n) => (
+            <li>
+              <span class="mono">
+                {n.data.date.toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
+              <a href={`/news/${n.id}`}>{n.data.title}</a>
+            </li>
+          ))}
+        </ul>
+        <p><a href="/news">All news →</a></p>
+      </section>
+    )
+  }
+
+  <section class="wrap">
+    <SectionHead kicker="People" title="The team" />
+    <div class="people-strip">
+      {people.map((p) => <PersonCard person={p} compact={true} />)}
+    </div>
+    <p><a href="/people">Everyone, including former trainees →</a></p>
+  </section>
+
+  <section class="wrap affil">
+    <span class="kicker mono">Supported by</span>
+    <div class="affil-row">
+      {
+        site.affiliations.map((a) => (
+          <a href={a.url} class="affil-item">
+            {a.short}
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .areas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 2.5rem;
+  }
+  @media (max-width: 640px) {
+    .areas {
+      grid-template-columns: 1fr;
+    }
+  }
+  .area {
+    background: var(--surface);
+    padding: 1.8rem 1.6rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: background 0.25s;
+  }
+  .area:hover {
+    background: var(--surface-2);
+  }
+  .area .mono {
+    color: var(--accent);
+    font-size: 0.7rem;
+  }
+  .area h3 {
+    font-size: 1.15rem;
+  }
+  .area p {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    margin: 0;
+  }
+
+  .spotlight-wrap {
+    padding-block: 0;
+  }
+  .spotlight {
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in oklab, var(--accent) 25%, transparent);
+    border-radius: var(--radius);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .spotlight h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin-top: 0.6rem;
+    max-width: 28ch;
+  }
+  .spotlight .authors {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin: 0.6rem 0 1rem;
+  }
+
+  .pubs,
+  .news {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .pubs li {
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .pubs a {
+    font-weight: 500;
+  }
+  .pubs .meta {
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    margin: 0.35rem 0 0;
+  }
+
+  .news li {
+    display: flex;
+    gap: 1.2rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .news .mono {
+    color: var(--accent);
+    flex: none;
+    font-variant-numeric: tabular-nums;
+  }
+  .news a {
+    text-decoration: none;
+  }
+  .news a:hover {
+    text-decoration: underline;
+  }
+
+  .people-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin: 2.5rem 0 1.5rem;
+  }
+
+  .affil {
+    border-top: 1px solid var(--line);
+  }
+  .affil-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2.5rem;
+    margin-top: 1.5rem;
+  }
+  .affil-item {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .affil-item:hover {
+    color: var(--accent);
+  }
+</style>

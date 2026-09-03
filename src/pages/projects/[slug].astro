@@ -1,0 +1,81 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((p) => ({ params: { slug: p.id }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+const d = project.data;
+const { Content } = await render(project);
+
+const fmt = (s?: string) =>
+  s
+    ? new Date(s).toLocaleDateString("en-GB", { month: "long", year: "numeric" })
+    : "";
+---
+
+<Base title={d.shortName ?? d.title} description={d.title}>
+  <article class="wrap proj">
+    <p><a href="/projects">← All projects</a></p>
+    {d.shortName && <span class="mono tag">{d.shortName}</span>}
+    <h1>{d.title}</h1>
+
+    <dl class="facts">
+      <div><dt>Funder</dt><dd>{d.funder}</dd></div>
+      {d.process && <div><dt>Process</dt><dd>{d.process}</dd></div>}
+      <div><dt>Period</dt><dd>{fmt(d.startDate)} – {fmt(d.endDate)}</dd></div>
+      <div><dt>Principal investigator</dt><dd>{d.pi}</dd></div>
+      {d.host && <div><dt>Host institution</dt><dd>{d.host}</dd></div>}
+      {
+        d.collaborators.length > 0 && (
+          <div>
+            <dt>Associated researchers</dt>
+            <dd>{d.collaborators.join(", ")}</dd>
+          </div>
+        )
+      }
+    </dl>
+
+    <div class="prose body"><Content /></div>
+  </article>
+</Base>
+
+<style>
+  .proj {
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+  }
+  .tag {
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  h1 {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    max-width: 26ch;
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem 2rem;
+    margin: 2rem 0;
+    padding: 1.5rem 0;
+    border-block: 1px solid var(--line);
+  }
+  .facts dt {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .facts dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.95rem;
+  }
+  .body {
+    color: var(--ink-soft);
+  }
+</style>

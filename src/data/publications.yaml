@@ -1,0 +1,110 @@
+# Publications.
+#
+# The COMPLETE list lives on the lab's Google Scholar profile (set socials.scholar
+# in site.yaml). This file holds the entries we want to feature on the site.
+#
+# To add a paper: give Claude the DOI ("add DOI 10.xxxx/xxxx, featured") and it
+# fills in the fields from Crossref, or copy an entry below and edit it.
+#
+# type: article | review | preprint | chapter | thesis
+# featured: true  -> shown on the home page and highlighted on /publications
+
+- doi: 10.1021/acsestengg.4c00443
+  title: >-
+    Engineering the Novel Extremophile Alga Chlamydomonas pacifica for High Lipid
+    and High Starch Production as a Path to Developing Commercially Relevant Strains
+  authors: >-
+    Gupta A*, Dutra Molino JV*, Wnuk-Fink KM, Bruckbauer A, Tessman M, Kang K,
+    Diaz CJ, Saucedo B, Malik A, Burkart MD, Mayfield SP
+  venue: ACS ES&T Engineering
+  year: 2025
+  volume: "5"
+  pages: 36–49
+  note: "* Co-first authors."
+  type: article
+  featured: true
+  areas: [biorefineries, genetic-engineering]
+  highlight: >-
+    Laboratory evolution and genetic engineering raised starch and lipid
+    accumulation in the extremophile C. pacifica. Expression vectors introduced a
+    starch-accumulation enzyme and a lipid-linked transcription factor; selected
+    strains were grown at 80-L pilot scale and the biomass evaluated for biodiesel
+    and bioplastic production.
+
+- doi: 10.1021/acssynbio.4c00199
+  title: >-
+    Bioinformatic Prediction and High Throughput In Vivo Screening to Identify
+    Cis-Regulatory Elements for the Development of Algal Synthetic Promoters
+  authors: >-
+    Torres-Tiji Y, Sethuram H, Gupta A, McCauley J, Dutra Molino JV, Pathania R,
+    Saxton L, Kang K, Hillson NJ, Mayfield SP
+  venue: ACS Synthetic Biology
+  year: 2024
+  volume: "13(7)"
+  pages: 2150–2165
+  type: article
+  featured: true
+  areas: [genetic-engineering]
+  highlight: >-
+    An optimized Chlamydomonas reinhardtii transformation method and base-vector
+    design were used to evaluate two synthetic-promoter libraries of roughly 2,000
+    promoters each. The workflow generated about 400,000 transformants and
+    identified several regulatory DNA-binding motifs in C. reinhardtii.
+
+- doi: 10.1016/j.algal.2025.104034
+  title: >-
+    Description of a Novel Extremophile Green Algae, Chlamydomonas pacifica, and
+    Its Potential as a Biotechnology Host
+  authors: >-
+    Dutra Molino JV, Oliver A, Sethuram H, Kang K, Saucedo B, Diaz CJ, Gupta A,
+    Jen LJ, Torres-Tiji Y, Hidasi N, Badary A, Jenkins H, Fields F, Simkovsky R,
+    Mayfield SP
+  venue: Algal Research
+  year: 2025
+  volume: "88"
+  pages: "104034"
+  note: Updated from the 2024 bioRxiv preprint to the final 2025 peer-reviewed article.
+  type: article
+  featured: true
+  areas: [genetic-engineering, biorefineries]
+  highlight: >-
+    Physiological, genomic, and biotechnological characterization of C. pacifica.
+    Its 121-Mb genome was assembled and annotated, revealing 17,829 genes and
+    enabling species-specific expression vectors. The work also demonstrated
+    sexual reproduction, established the phylogenetic position, and identified
+    triacylglycerols of biotechnological interest.
+
+- doi: 10.1016/j.algal.2021.102570
+  title: Development of a Cell Surface Display System in Chlamydomonas reinhardtii
+  authors: Molino JVD, Carpine R, Gademann K, Mayfield SP, Sieber S
+  venue: Algal Research
+  year: 2022
+  volume: "61"
+  pages: "102570"
+  type: article
+  featured: true
+  areas: [genetic-engineering, recombinant-proteins]
+  highlight: >-
+    Introduced cell-surface-display strategies for the two structures exposed to
+    the extracellular environment in C. reinhardtii — the cell wall and the plasma
+    membrane — and demonstrated simultaneous anchoring of at least two proteins to
+    the cell wall, supporting bioremediation, whole-cell biocatalysis, and
+    drug-delivery applications.
+
+- doi: 10.1371/journal.pone.0192433
+  title: >-
+    Comparison of Secretory Signal Peptides for Heterologous Protein Expression in
+    Microalgae: Expanding the Secretion Portfolio for Chlamydomonas reinhardtii
+  authors: Molino JVD, de Carvalho JCM, Mayfield SP
+  venue: PLOS ONE
+  year: 2018
+  volume: "13(2)"
+  pages: e0192433
+  type: article
+  featured: true
+  areas: [recombinant-proteins]
+  highlight: >-
+    More than 2,000 putative signal peptides were identified with SignalP and ten
+    were tested experimentally — four previously reported and six new candidates.
+    Two newly identified sequences produced the highest heterologous-protein
+    secretion, expanding the molecular toolkit for microalgal biomanufacturing.

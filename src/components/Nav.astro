@@ -1,0 +1,145 @@
+---
+import Logo from "./Logo.astro";
+import { site } from "../lib/data";
+
+interface Props {
+  heroNav?: boolean;
+}
+const { heroNav = false } = Astro.props;
+const path = Astro.url.pathname;
+---
+
+<header class:list={["nav", { hero: heroNav }]} id="site-nav">
+  <a class="brand" href="/" aria-label={`${site.name} — home`}>
+    <Logo />
+  </a>
+
+  <nav class="links" aria-label="Primary">
+    {
+      site.nav.map((item) => (
+        <a
+          href={item.href}
+          aria-current={path.startsWith(item.href) ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <button class="toggle" id="theme-toggle" type="button" aria-label="Toggle colour theme">
+    Theme
+  </button>
+</header>
+
+<script>
+  const root = document.documentElement;
+  const btn = document.getElementById("theme-toggle");
+  function current() {
+    try {
+      return (
+        localStorage.getItem("jl-theme") ||
+        (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+      );
+    } catch (e) {
+      return "light";
+    }
+  }
+  btn?.addEventListener("click", () => {
+    const next = current() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try {
+      localStorage.setItem("jl-theme", next);
+    } catch (e) {}
+  });
+
+  // transparent-over-hero nav gains a solid background on scroll
+  const nav = document.getElementById("site-nav");
+  if (nav?.classList.contains("hero")) {
+    const onScroll = () =>
+      nav.classList.toggle("scrolled", window.scrollY > window.innerHeight * 0.7);
+    onScroll();
+    addEventListener("scroll", onScroll, { passive: true });
+  }
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem var(--pad);
+    background: color-mix(in oklab, var(--ground) 88%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    transition:
+      background 0.35s var(--ease),
+      color 0.35s var(--ease),
+      border-color 0.35s var(--ease);
+  }
+
+  /* over a dark hero: start transparent, no border, light text */
+  .nav.hero {
+    background: transparent;
+    border-bottom-color: transparent;
+    color: var(--hero-ink);
+    margin-bottom: -64px;
+    position: relative;
+  }
+  .nav.hero .links a {
+    color: inherit;
+  }
+  .nav.hero.scrolled {
+    position: sticky;
+    color: var(--ink);
+    background: color-mix(in oklab, var(--ground) 88%, transparent);
+    border-bottom-color: var(--line);
+  }
+
+  .brand {
+    text-decoration: none;
+    display: inline-flex;
+  }
+
+  .links {
+    display: flex;
+    gap: 1.3rem;
+    align-items: center;
+  }
+  .links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .links a:hover,
+  .links a[aria-current="page"] {
+    color: var(--accent);
+  }
+
+  .toggle {
+    font: inherit;
+    font-size: 0.78rem;
+    background: transparent;
+    color: inherit;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 0.28rem 0.75rem;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  .toggle:hover {
+    opacity: 1;
+  }
+
+  @media (max-width: 900px) {
+    .links {
+      display: none;
+    }
+  }
+</style>

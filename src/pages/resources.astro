@@ -1,0 +1,78 @@
+---
+import Base from "../layouts/Base.astro";
+import SectionHead from "../components/SectionHead.astro";
+---
+
+<Base
+  title="Resources"
+  description="Protocols, open hardware, datasets, and code from the JUST Lab."
+>
+  <section class="wrap">
+    <SectionHead
+      kicker="Resources"
+      title="Open protocols, hardware, data, and code"
+      lead="The JUST Lab shares its methods and tools openly. This page is being populated — the sections below show what will live here."
+    />
+  </section>
+
+  <section class="wrap">
+    <div class="grid">
+      <div class="card">
+        <h3>Protocols</h3>
+        <p>
+          Step-by-step methods for transformation, screening, cultivation, and
+          downstream processing — each linked to a document or protocols.io entry.
+        </p>
+        <p class="mono todo">TODO: add protocol links</p>
+      </div>
+      <div class="card">
+        <h3>Open hardware</h3>
+        <p>
+          Reactor designs, bills of materials, CAD files, and build guides —
+          including the modular 3D-printed photobioreactor.
+        </p>
+        <p class="mono todo">TODO: add repository links (GitHub / OSF)</p>
+      </div>
+      <div class="card">
+        <h3>Datasets</h3>
+        <p>Published datasets with repository links (Zenodo, OSF).</p>
+        <p class="mono todo">TODO: add dataset DOIs</p>
+      </div>
+      <div class="card">
+        <h3>Software &amp; code</h3>
+        <p>Analysis scripts, vector-design tools, and other code.</p>
+        <p class="mono todo">TODO: add repository links</p>
+      </div>
+      <div class="card">
+        <h3>Strains &amp; plasmids</h3>
+        <p>Availability of strains and plasmids; Addgene links where deposited.</p>
+        <p class="mono todo">TODO</p>
+      </div>
+      <div class="card">
+        <h3>Teaching materials</h3>
+        <p>Course and workshop content.</p>
+        <p class="mono todo">TODO</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+  .card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  .card p {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+  }
+  .todo {
+    color: var(--gold);
+    font-size: 0.66rem;
+  }
+</style>

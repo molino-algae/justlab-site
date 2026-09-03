@@ -1,0 +1,165 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  person: CollectionEntry<"people">;
+  compact?: boolean;
+}
+const { person, compact = false } = Astro.props;
+const d = person.data;
+
+// photos live in src/assets/people/<photo>; none yet -> initials avatar
+const photos = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/people/*.{jpeg,jpg,png,webp,avif}",
+);
+const photoKey = d.photo ? `/src/assets/people/${d.photo}` : null;
+const photoMod = photoKey && photos[photoKey] ? await photos[photoKey]() : null;
+
+const initials = d.name
+  .split(/\s+/)
+  .filter(Boolean)
+  .map((w) => w[0])
+  .slice(0, 2)
+  .join("")
+  .toUpperCase();
+
+const linkDefs = [
+  ["orcid", "ORCID", d.links.orcid],
+  ["scholar", "Scholar", d.links.scholar],
+  ["lattes", "Lattes", d.links.lattes],
+  ["fapesp", "FAPESP", d.links.fapesp],
+  ["email", "Email", d.links.email ? `mailto:${d.links.email}` : undefined],
+] as const;
+const links = linkDefs.filter(([, , href]) => href);
+---
+
+<article class:list={["pcard", { compact }]}>
+  <div class="avatar">
+    {
+      photoMod ? (
+        <Image src={photoMod.default} alt={d.name} width={160} height={160} />
+      ) : (
+        <span aria-hidden="true">{initials}</span>
+      )
+    }
+  </div>
+  <div class="pbody">
+    <h3>{d.name}</h3>
+    <p class="role">{d.role}</p>
+    {
+      d.project && (
+        <p class="project">
+          <span class="mono">Project</span> {d.project.title}
+        </p>
+      )
+    }
+    <slot />
+    {
+      links.length > 0 && (
+        <div class="plinks">
+          {links.map(([key, label, href]) => (
+            <a href={href} data-k={key}>
+              {label}
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .pcard {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    display: flex;
+    gap: 1.2rem;
+    transition:
+      transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+  .pcard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px -20px rgba(10, 96, 66, 0.35);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pcard:hover {
+      transform: none;
+    }
+  }
+  .pcard.compact {
+    padding: 1.1rem;
+    gap: 0.9rem;
+  }
+
+  .avatar {
+    width: 64px;
+    height: 64px;
+    flex: none;
+    border-radius: 50%;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    color: #05130d;
+    background: linear-gradient(135deg, var(--accent-bright), #6cecb4);
+  }
+  .avatar :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pbody {
+    min-width: 0;
+  }
+  h3 {
+    font-size: 1.12rem;
+  }
+  .role {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin: 0.2rem 0 0;
+  }
+  .project {
+    color: var(--ink-soft);
+    font-size: 0.86rem;
+    margin: 0.7rem 0 0;
+  }
+  .project .mono {
+    color: var(--accent);
+    margin-right: 0.35rem;
+  }
+
+  .plinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.9rem;
+  }
+  .plinks a {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.2em 0.6em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-faint);
+    transition:
+      color 0.2s,
+      border-color 0.2s,
+      background 0.2s;
+  }
+  .plinks a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+</style>

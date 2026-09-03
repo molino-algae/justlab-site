@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://justlab.com.br/sitemap-index.xml

@@ -1,0 +1,51 @@
+# Global site config. Rare edits. Lab members: safe to change text values;
+# keep the structure (indentation) intact.
+
+name: JUST Lab
+# JUST = "JustLab Unlocks Sustainable Technologies" — the open padlock in the
+# logo means "unlocks"; the leaf means sustainability.
+acronym: JustLab Unlocks Sustainable Technologies
+tagline: from gene to bioprocess
+description: >-
+  The JUST Lab develops microalgal platforms for genetic engineering,
+  recombinant-protein production, biopharmaceuticals, sustainable bioprocesses,
+  and scale-up.
+
+department: Department of Biotechnology — DEBIQ
+institution: Escola de Engenharia de Lorena, University of São Paulo — EEL/USP
+
+address:
+  lines:
+    - Estrada Municipal do Campinho, 100
+    - "Campinho, Lorena–SP, 12602-810, Brazil"
+  # maps link is optional
+  maps: https://www.google.com/maps/search/?api=1&query=Estrada+Municipal+do+Campinho+100+Lorena+SP
+
+email: molino@usp.br
+
+nav:
+  - { label: Research, href: /research }
+  - { label: Projects, href: /projects }
+  - { label: Publications, href: /publications }
+  - { label: People, href: /people }
+  - { label: Resources, href: /resources }
+  - { label: Infrastructure, href: /infrastructure }
+  - { label: News, href: /news }
+  - { label: Contact, href: /contact }
+
+# Funders & host institutions shown on the home page and in the footer.
+affiliations:
+  - { name: University of São Paulo, short: USP, logo: usp-logo.png, url: https://www5.usp.br/ }
+  - { name: FAPESP, short: FAPESP, logo: FAPESP-logo.png, url: https://fapesp.br/ }
+  - { name: Escola de Engenharia de Lorena, short: EEL-USP, logo: eel-logo.png, url: https://eel.usp.br/ }
+
+# Lab-wide profiles. Fill in as they exist.
+socials:
+  github: https://github.com/molino-algae
+  scholar: "" # TODO: lab Google Scholar profile URL — drives the full publications list
+  orcid: ""
+  bluesky: ""
+  linkedin: ""
+
+# Keep as a cross-cutting thread on the Research page? (lab to confirm)
+openScience: true

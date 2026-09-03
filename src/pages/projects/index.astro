@@ -1,0 +1,127 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import SectionHead from "../../components/SectionHead.astro";
+
+const projects = (await getCollection("projects")).sort(
+  (a, b) =>
+    +new Date(b.data.startDate ?? 0) - +new Date(a.data.startDate ?? 0),
+);
+const active = projects.filter((p) => p.data.status === "active");
+const done = projects.filter((p) => p.data.status === "completed");
+
+const fmt = (d?: string) =>
+  d
+    ? new Date(d).toLocaleDateString("en-GB", { month: "short", year: "numeric" })
+    : "";
+---
+
+<Base title="Projects" description="Funded research projects at the JUST Lab.">
+  <section class="wrap">
+    <SectionHead
+      kicker="Projects"
+      title="Funded research"
+      lead="Grant-funded projects, each tagged to a research area."
+    />
+  </section>
+
+  <section class="wrap grid-wrap">
+    <div class="grid">
+      {
+        active.map((p) => (
+          <a class="proj" href={`/projects/${p.id}`}>
+            {p.data.shortName && <span class="mono tag">{p.data.shortName}</span>}
+            <h3>{p.data.title}</h3>
+            <p class="meta">
+              {p.data.funder}
+              {p.data.process ? ` · ${p.data.process}` : ""} · {fmt(p.data.startDate)}
+              {p.data.endDate ? ` – ${fmt(p.data.endDate)}` : ""}
+            </p>
+            <p class="pi">PI: {p.data.pi}</p>
+          </a>
+        ))
+      }
+    </div>
+
+    {
+      done.length > 0 && (
+        <>
+          <h2 class="done-h">Completed</h2>
+          <ul class="done">
+            {done.map((p) => (
+              <li>
+                <a href={`/projects/${p.id}`}>{p.data.title}</a>
+                <span class="mono">
+                  {fmt(p.data.startDate)} – {fmt(p.data.endDate)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.2rem;
+  }
+  .proj {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition:
+      transform 0.2s var(--ease),
+      border-color 0.2s;
+  }
+  .proj:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+  }
+  .tag {
+    color: var(--accent);
+    font-size: 0.66rem;
+  }
+  .proj h3 {
+    font-size: 1.05rem;
+  }
+  .meta {
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+  .pi {
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+  .done-h {
+    margin: 3rem 0 1rem;
+    font-size: 1.2rem;
+  }
+  .done {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .done li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .done .mono {
+    color: var(--ink-faint);
+    flex: none;
+  }
+</style>

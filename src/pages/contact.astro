@@ -1,0 +1,97 @@
+---
+import Base from "../layouts/Base.astro";
+import SectionHead from "../components/SectionHead.astro";
+import { site } from "../lib/data";
+---
+
+<Base
+  title="Contact"
+  description={`Contact the JUST Lab — ${site.address.lines.join(", ")}`}
+>
+  <section class="wrap">
+    <SectionHead kicker="Contact" title="Get in touch" />
+  </section>
+
+  <section class="wrap cols">
+    <div>
+      <h3>Address</h3>
+      <address>
+        <strong>{site.name}</strong><br />
+        {site.department}<br />
+        {site.institution}<br />
+        <br />
+        {site.address.lines.map((l: string) => <>{l}<br /></>)}
+      </address>
+      {
+        site.address.maps && (
+          <p>
+            <a href={site.address.maps}>Open in Google Maps →</a>
+          </p>
+        )
+      }
+
+      <h3>Email</h3>
+      <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+
+      <h3>Profiles</h3>
+      <ul class="profiles">
+        {site.socials.github && <li><a href={site.socials.github}>GitHub</a></li>}
+        {site.socials.scholar && <li><a href={site.socials.scholar}>Google Scholar</a></li>}
+        {site.socials.orcid && <li><a href={site.socials.orcid}>ORCID</a></li>}
+        {site.socials.linkedin && <li><a href={site.socials.linkedin}>LinkedIn</a></li>}
+        {site.socials.bluesky && <li><a href={site.socials.bluesky}>Bluesky</a></li>}
+      </ul>
+    </div>
+
+    <div>
+      <h3>Prospective students</h3>
+      <p class="prose">
+        The JUST Lab takes undergraduate researchers (iniciação científica) and
+        co-supervised students. Send a short email with your course and year, a
+        brief note on your background, and which research area interests you.
+        Mention any FAPESP fellowship you plan to apply for (IC, MS, DR).
+      </p>
+
+      <h3>Collaborators</h3>
+      <p class="prose">
+        We collaborate across all four research areas — genetic engineering and
+        synthetic biology, recombinant proteins and biopharmaceuticals,
+        photobioreactors and bioprocess development, and algal biorefineries.
+        Email {site.email} to start a conversation.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  @media (max-width: 760px) {
+    .cols {
+      grid-template-columns: 1fr;
+    }
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin: 1.6rem 0 0.5rem;
+  }
+  h3:first-child {
+    margin-top: 0;
+  }
+  address {
+    font-style: normal;
+    color: var(--ink-soft);
+    line-height: 1.9;
+  }
+  .profiles {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+</style>

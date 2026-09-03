@@ -1,0 +1,38 @@
+name: Deploy to Hostinger (FTPS)
+
+# DORMANT until cutover day.
+# It only runs when triggered by hand from the Actions tab (workflow_dispatch).
+# At cutover: back up + empty public_html, then either keep triggering it by
+# hand or add `push: { branches: [main] }` here so every merge deploys.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_dir:
+        description: "Remote directory under the FTP account"
+        required: true
+        default: "public_html/preview/"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+      - name: Upload via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }} # e.g. justlab.com.br
+          username: ${{ secrets.FTP_USERNAME }} # u365908489
+          password: ${{ secrets.FTP_PASSWORD }} # <- add this secret
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: ${{ github.event.inputs.target_dir }}
+          # keep files that aren't part of the build (e.g. other subfolders)
+          dangerous-clean-slate: false

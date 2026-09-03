@@ -1,0 +1,78 @@
+---
+/**
+ * Placeholder mark — an open padlock ("unlocks") holding a leaf ("sustainable").
+ * Swap for the lab's official SVG when it lands in src/assets/logos/.
+ * variant: "full" (icon + wordmark) | "icon"
+ */
+interface Props {
+  variant?: "full" | "icon";
+  class?: string;
+}
+const { variant = "full", class: className } = Astro.props;
+---
+
+<span class:list={["logo", className]} data-variant={variant}>
+  <svg
+    class="logo-mark"
+    viewBox="0 0 40 48"
+    role="img"
+    aria-label="JUST Lab"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <!-- open shackle -->
+    <path
+      d="M12 21 V14 a8 8 0 0 1 16 0 V18"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="3.4"
+      stroke-linecap="round"
+    ></path>
+    <!-- body -->
+    <rect x="4" y="20" width="32" height="26" rx="8" fill="currentColor"></rect>
+    <!-- leaf, knocked out of the body -->
+    <path
+      d="M20 25.5 C 13.5 29.5, 13.5 40.5, 20 43 C 26.5 40.5, 26.5 29.5, 20 25.5 Z"
+      fill="var(--logo-knockout, var(--ground))"
+    ></path>
+    <path
+      d="M20 27 V41.5 M20 33 l4 -2 M20 36 l-4 -2"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+    ></path>
+  </svg>
+  {
+    variant === "full" && (
+      <span class="logo-word">
+        JUST<b>LAB</b>
+      </span>
+    )
+  }
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--accent);
+  }
+  .logo-mark {
+    width: 1.55em;
+    height: 1.86em;
+    flex: none;
+  }
+  .logo-word {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+  .logo-word b {
+    font-weight: 600;
+    color: var(--accent);
+    margin-left: 0.12em;
+  }
+</style>

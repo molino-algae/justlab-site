@@ -1,0 +1,20 @@
+# Former Trainees and Co-supervised Students.
+# (Website heading is "Former Trainees and Co-supervised Students", not "Past Members".)
+# A flat list — one line per person. kind: undergrad | grad
+
+undergraduate:
+  - { name: Tatiana Lopes, institution: "Faculdade de Ciências Farmacêuticas, USP", period: "Sep 2010 – Jul 2012" }
+  - { name: Lívia Bonafini Junqueira, institution: "Faculdade de Ciências Farmacêuticas, USP", period: "Dec 2010 – Dec 2011" }
+  - { name: Vivian Fonseca Gonzaga, institution: "Faculdade de Ciências Farmacêuticas, USP", period: "Sep 2011 – Aug 2012" }
+  - { name: Viviane Mayumi Siratuti, institution: "Faculdade de Ciências Farmacêuticas, USP", period: "Jun 2016 – May 2017" }
+  - { name: Kai Douglas, institution: "University of California San Diego", period: "Jun – Sep 2022" }
+  - { name: Lauren May, institution: "California Polytechnic State University, San Luis Obispo", period: "Jun – Sep 2022" }
+  - { name: Rodeon Malinovski, institution: "University of California San Diego", period: "Jun – Nov 2022" }
+  - { name: Chloe Walsh, institution: "California Polytechnic State University, San Luis Obispo", period: "Feb 2023 – Feb 2024" }
+  - { name: Kalisa Kang, institution: "University of California San Diego", period: "Feb 2022 – Oct 2024" }
+
+graduate:
+  - { name: Vitor Marchesan, level: "Master's", institution: "Universidade Federal do ABC", period: "Nov 2020 – Oct 2023" }
+  - { name: Harish Rithish, level: "Master's", institution: "University of California San Diego", period: "Jan 2022 – Jun 2023" }
+  - { name: Crisandra Diaz, level: "PhD", institution: "University of California San Diego", period: "Jan 2022 – Jun 2026; completed" }
+  - { name: Abhishek Gupta, level: "PhD", institution: "University of California San Diego", period: "Jun 2022 – present" }

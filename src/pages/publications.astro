@@ -1,0 +1,123 @@
+---
+import Base from "../layouts/Base.astro";
+import SectionHead from "../components/SectionHead.astro";
+import { site, publications, type Publication } from "../lib/data";
+
+const pubs = publications.slice().sort((a, b) => b.year - a.year);
+const byYear = new Map<number, Publication[]>();
+for (const p of pubs) {
+  if (!byYear.has(p.year)) byYear.set(p.year, []);
+  byYear.get(p.year)!.push(p);
+}
+const years = [...byYear.keys()];
+---
+
+<Base
+  title="Publications"
+  description="Selected and featured publications from the JUST Lab."
+>
+  <section class="wrap">
+    <SectionHead
+      kicker="Publications"
+      title="Selected and featured work"
+      lead="This page highlights key papers. The complete, always-current list lives on the lab's Google Scholar profile."
+    />
+    {
+      site.socials.scholar ? (
+        <p>
+          <a href={site.socials.scholar}>Full publication list on Google Scholar →</a>
+        </p>
+      ) : (
+        <p class="mono todo">TODO: add the lab's Google Scholar profile URL to site.yaml</p>
+      )
+    }
+  </section>
+
+  {
+    years.map((y) => (
+      <section class="wrap yr">
+        <h2>{y}</h2>
+        <ul>
+          {byYear.get(y)!.map((p) => (
+            <li class:list={{ feat: p.featured }}>
+              <div class="cite">
+                <a href={`https://doi.org/${p.doi}`}>{p.title}</a>
+                <p class="meta">
+                  {p.authors} · <i>{p.venue}</i>
+                  {p.volume ? ` ${p.volume}` : ""}
+                  {p.pages ? `, ${p.pages}` : ""} ({p.year})
+                </p>
+                {p.note && <p class="note">{p.note}</p>}
+                {p.featured && p.highlight && (
+                  <p class="hl">{p.highlight}</p>
+                )}
+              </div>
+              <span class="mono type">{p.type}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .yr {
+    padding-block: 1.5rem clamp(1.5rem, 4vw, 2.5rem);
+    border-top: 1px solid var(--line);
+  }
+  .yr h2 {
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 0.5rem;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    display: flex;
+    gap: 1.4rem;
+    justify-content: space-between;
+    padding: 1.3rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  li.feat .cite a {
+    font-weight: 600;
+  }
+  .cite a {
+    font-weight: 500;
+  }
+  .meta {
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    margin: 0.35rem 0 0;
+  }
+  .note {
+    color: var(--ink-faint);
+    font-size: 0.82rem;
+    margin: 0.3rem 0 0;
+  }
+  .hl {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin: 0.6rem 0 0;
+    max-width: 62ch;
+  }
+  .type {
+    flex: none;
+    color: var(--ink-faint);
+    font-size: 0.62rem;
+    padding-top: 0.2rem;
+  }
+  .todo {
+    color: var(--gold);
+  }
+  @media (max-width: 620px) {
+    li {
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+  }
+</style>

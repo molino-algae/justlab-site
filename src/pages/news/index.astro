@@ -1,0 +1,105 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import SectionHead from "../../components/SectionHead.astro";
+
+const news = (await getCollection("news")).sort(
+  (a, b) => +b.data.date - +a.data.date,
+);
+const byYear = new Map<number, typeof news>();
+for (const n of news) {
+  const y = n.data.date.getFullYear();
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(n);
+}
+---
+
+<Base title="News" description="News and updates from the JUST Lab.">
+  <section class="wrap">
+    <SectionHead kicker="News" title="Updates from the lab" />
+  </section>
+
+  {
+    news.length === 0 && (
+      <section class="wrap">
+        <p class="prose">No posts yet.</p>
+      </section>
+    )
+  }
+
+  {
+    [...byYear.keys()].map((y) => (
+      <section class="wrap yr">
+        <h2>{y}</h2>
+        <ul>
+          {byYear.get(y)!.map((n) => (
+            <li>
+              <span class="mono">
+                {n.data.date.toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                })}
+              </span>
+              <div>
+                <a href={`/news/${n.id}`}>{n.data.title}</a>
+                {n.data.tags.length > 0 && (
+                  <span class="tags">
+                    {n.data.tags.map((t) => (
+                      <span class="mono tag">{t}</span>
+                    ))}
+                  </span>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .yr {
+    padding-block: 1.2rem 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .yr h2 {
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    display: flex;
+    gap: 1.2rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  li .mono {
+    color: var(--ink-faint);
+    flex: none;
+    padding-top: 0.15rem;
+  }
+  li a {
+    text-decoration: none;
+    font-weight: 500;
+  }
+  li a:hover {
+    text-decoration: underline;
+  }
+  .tags {
+    display: inline-flex;
+    gap: 0.4rem;
+    margin-left: 0.6rem;
+  }
+  .tag {
+    color: var(--accent);
+    font-size: 0.6rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.1em 0.5em;
+  }
+</style>

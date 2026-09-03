@@ -1,0 +1,196 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../layouts/Base.astro";
+import SectionHead from "../components/SectionHead.astro";
+import PersonCard from "../components/PersonCard.astro";
+import { alumni } from "../lib/data";
+
+const all = await getCollection("people");
+const byCat = (c: string) =>
+  all
+    .filter((p) => p.data.category === c)
+    .sort((a, b) => a.data.order - b.data.order);
+
+const pi = byCat("pi");
+const collaborators = byCat("collaborator");
+const undergrads = byCat("undergrad");
+const grads = byCat("grad");
+const researchers = byCat("researcher");
+const staff = byCat("staff");
+
+const bios = new Map(
+  await Promise.all(
+    all.map(async (p) => [p.id, (await render(p)).Content] as const),
+  ),
+);
+---
+
+<Base title="People" description="The JUST Lab team and its former trainees.">
+  <section class="wrap">
+    <SectionHead kicker="People" title="Who works in the JUST Lab" />
+  </section>
+
+  <section class="wrap grp">
+    <h2 class="grp-h">Principal investigator</h2>
+    <div class="grid">
+      {
+        pi.map((p) => {
+          const Bio = bios.get(p.id);
+          return (
+            <PersonCard person={p}>
+              {Bio && (
+                <div class="bio">
+                  <Bio />
+                </div>
+              )}
+            </PersonCard>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  {
+    collaborators.length > 0 && (
+      <section class="wrap grp">
+        <h2 class="grp-h">Collaborators</h2>
+        <div class="grid">
+          {collaborators.map((p) => {
+            const Bio = bios.get(p.id);
+            return (
+              <PersonCard person={p}>
+                {Bio && (
+                  <div class="bio">
+                    <Bio />
+                  </div>
+                )}
+              </PersonCard>
+            );
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    undergrads.length > 0 && (
+      <section class="wrap grp">
+        <h2 class="grp-h">Undergraduate researchers</h2>
+        <div class="grid">
+          {undergrads.map((p) => {
+            const Bio = bios.get(p.id);
+            return (
+              <PersonCard person={p}>
+                {Bio && (
+                  <div class="bio">
+                    <Bio />
+                  </div>
+                )}
+              </PersonCard>
+            );
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    [researchers, grads, staff].some((g) => g.length > 0) && (
+      <section class="wrap grp">
+        <h2 class="grp-h">Researchers, graduate students &amp; staff</h2>
+        <div class="grid">
+          {[...researchers, ...grads, ...staff].map((p) => (
+            <PersonCard person={p} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="wrap grp former">
+    <h2 class="grp-h">Former Trainees and Co-supervised Students</h2>
+
+    <h3>Undergraduate research</h3>
+    <ul class="flat">
+      {
+        alumni.undergraduate.map((a) => (
+          <li>
+            <b>{a.name}</b> — {a.institution} <span class="mono">{a.period}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h3>Graduate research</h3>
+    <ul class="flat">
+      {
+        alumni.graduate.map((a) => (
+          <li>
+            <b>{a.name}</b> — {a.level}, {a.institution}{" "}
+            <span class="mono">{a.period}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="wrap join">
+    <div class="card">
+      <h2>Join us</h2>
+      <p class="prose">
+        The JUST Lab takes undergraduate researchers (iniciação científica) and
+        co-supervised students. If microalgal engineering, recombinant proteins,
+        or sustainable bioprocesses interest you, get in touch with a short note
+        about your background and what you'd like to work on.
+      </p>
+      <a class="btn btn-primary" href="/contact">Contact the lab</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .grp {
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+    border-top: 1px solid var(--line);
+  }
+  .grp-h {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.2rem;
+  }
+  .bio {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin-top: 0.7rem;
+  }
+  .former h3 {
+    font-size: 1.05rem;
+    margin: 1.6rem 0 0.6rem;
+  }
+  .flat {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .flat li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+  .flat b {
+    color: var(--ink);
+  }
+  .flat .mono {
+    color: var(--ink-faint);
+    font-size: 0.66rem;
+    margin-left: 0.4rem;
+  }
+  .join {
+    border-top: 1px solid var(--line);
+  }
+</style>

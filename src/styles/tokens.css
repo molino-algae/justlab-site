@@ -1,0 +1,66 @@
+/* JUST Lab — design tokens (ported from the Motion Study)
+   Light palette on bare :root; dark redefines only the tokens.
+   The hero is a single dark "photobioreactor" world — its tokens are the
+   same in both themes on purpose. */
+
+:root {
+  --ground: #fbfcfa;
+  --surface: #ffffff;
+  --surface-2: #f1f5f0;
+  --ink: #101a14;
+  --ink-soft: #45554c;
+  --ink-faint: #7b8a80;
+  --line: #e1e8e1;
+  --accent: #0a6042;
+  --accent-bright: #0e8f5f;
+  --accent-soft: #e7f4ee;
+  --gold: #8a6410;
+
+  /* hero — single dark world, identical in both themes */
+  --hero-bg: #071310;
+  --hero-ink: #ecfff7;
+  --hero-soft: #9fdcc4;
+  --hero-mono: #63cfa2;
+  --hero-particle: #55ecac;
+
+  --maxw: 1140px;
+  --prose: 66ch;
+  --pad: clamp(1.25rem, 5vw, 3rem);
+  --sect: clamp(4rem, 10vw, 8rem);
+  --radius: 14px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0b1913;
+    --surface: #10251d;
+    --surface-2: #15291f;
+    --ink: #e9f3ec;
+    --ink-soft: #a7b8ad;
+    --ink-faint: #74857b;
+    --line: #223429;
+    --accent: #4fdd9d;
+    --accent-bright: #6cecb4;
+    --accent-soft: #12352a;
+    --gold: #d3a75c;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #0b1913;
+  --surface: #10251d;
+  --surface-2: #15291f;
+  --ink: #e9f3ec;
+  --ink-soft: #a7b8ad;
+  --ink-faint: #74857b;
+  --line: #223429;
+  --accent: #4fdd9d;
+  --accent-bright: #6cecb4;
+  --accent-soft: #12352a;
+  --gold: #d3a75c;
+}
