@@ -4,6 +4,9 @@ Static site for the JUST Lab (Department of Biotechnology — DEBIQ, EEL/USP),
 built with [Astro](https://astro.build). Content lives in this repo as Markdown
 and YAML; every change is a commit.
 
+**Preview:** https://molino-algae.github.io/justlab-site/ — rebuilds on every push
+to `main`. The live `justlab.com.br` is untouched until cutover.
+
 ## Develop
 
 ```bash
@@ -34,9 +37,9 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to add yourself or a news post.
 
 ## Deploy
 
-- **Preview** — Cloudflare Pages builds every push and serves it at a
-  `*.pages.dev` URL for sharing with the lab. The live `justlab.com.br` is
-  untouched during the rebuild.
+- **Preview** — `.github/workflows/deploy-pages.yml` builds every push to `main`
+  and publishes to GitHub Pages (`GITHUB_PAGES=true` sets the `/justlab-site/`
+  base path). Share https://molino-algae.github.io/justlab-site/ with the lab.
 - **Production (Hostinger, FTPS)** — `.github/workflows/deploy.yml`. Dormant:
   runs only when triggered by hand from the Actions tab. Needs three repo
   secrets: `FTP_SERVER` (`justlab.com.br`), `FTP_USERNAME` (`u365908489`),
