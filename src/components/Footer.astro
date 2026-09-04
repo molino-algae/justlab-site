@@ -1,5 +1,6 @@
 ---
 import { site } from "../lib/data";
+import { href } from "../lib/url";
 import Logo from "./Logo.astro";
 const year = new Date().getFullYear();
 ---
@@ -14,7 +15,7 @@ const year = new Date().getFullYear();
 
     <div class="foot-col">
       <h4>Navigate</h4>
-      {site.nav.map((i) => <a href={i.href}>{i.label}</a>)}
+      {site.nav.map((i) => <a href={href(i.href)}>{i.label}</a>)}
     </div>
 
     <div class="foot-col">

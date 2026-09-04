@@ -4,6 +4,7 @@ import Base from "../layouts/Base.astro";
 import SectionHead from "../components/SectionHead.astro";
 import PersonCard from "../components/PersonCard.astro";
 import { alumni } from "../lib/data";
+import { href } from "../lib/url";
 
 const all = await getCollection("people");
 const byCat = (c: string) =>
@@ -143,7 +144,7 @@ const bios = new Map(
         or sustainable bioprocesses interest you, get in touch with a short note
         about your background and what you'd like to work on.
       </p>
-      <a class="btn btn-primary" href="/contact">Contact the lab</a>
+      <a class="btn btn-primary" href={href("/contact")}>Contact the lab</a>
     </div>
   </section>
 </Base>

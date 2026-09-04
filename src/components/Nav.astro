@@ -1,6 +1,7 @@
 ---
 import Logo from "./Logo.astro";
 import { site } from "../lib/data";
+import { href, isActive } from "../lib/url";
 
 interface Props {
   heroNav?: boolean;
@@ -10,7 +11,7 @@ const path = Astro.url.pathname;
 ---
 
 <header class:list={["nav", { hero: heroNav }]} id="site-nav">
-  <a class="brand" href="/" aria-label={`${site.name} — home`}>
+  <a class="brand" href={href("/")} aria-label={`${site.name} — home`}>
     <Logo />
   </a>
 
@@ -18,8 +19,8 @@ const path = Astro.url.pathname;
     {
       site.nav.map((item) => (
         <a
-          href={item.href}
-          aria-current={path.startsWith(item.href) ? "page" : undefined}
+          href={href(item.href)}
+          aria-current={isActive(path, item.href) ? "page" : undefined}
         >
           {item.label}
         </a>

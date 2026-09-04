@@ -5,6 +5,7 @@ import HeroCanvas from "../components/HeroCanvas.astro";
 import SectionHead from "../components/SectionHead.astro";
 import PersonCard from "../components/PersonCard.astro";
 import { site, publications } from "../lib/data";
+import { href } from "../lib/url";
 
 const research = (await getCollection("research")).sort(
   (a, b) => a.data.order - b.data.order,
@@ -33,7 +34,7 @@ const spotlight = featured[0];
     <div class="areas">
       {
         research.map((r) => (
-          <a class="area" href={`/research#${r.data.slug}`}>
+          <a class="area" href={`${href("/research")}#${r.data.slug}`}>
             <span class="mono">0{r.data.order}</span>
             <h3>{r.data.title}</h3>
             <p>{r.data.summary}</p>
@@ -75,7 +76,7 @@ const spotlight = featured[0];
         ))
       }
     </ul>
-    <p><a href="/publications">All publications →</a></p>
+    <p><a href={href("/publications")}>All publications →</a></p>
   </section>
 
   {
@@ -92,11 +93,11 @@ const spotlight = featured[0];
                   year: "numeric",
                 })}
               </span>
-              <a href={`/news/${n.id}`}>{n.data.title}</a>
+              <a href={href(`/news/${n.id}`)}>{n.data.title}</a>
             </li>
           ))}
         </ul>
-        <p><a href="/news">All news →</a></p>
+        <p><a href={href("/news")}>All news →</a></p>
       </section>
     )
   }
@@ -106,7 +107,7 @@ const spotlight = featured[0];
     <div class="people-strip">
       {people.map((p) => <PersonCard person={p} compact={true} />)}
     </div>
-    <p><a href="/people">Everyone, including former trainees →</a></p>
+    <p><a href={href("/people")}>Everyone, including former trainees →</a></p>
   </section>
 
   <section class="wrap affil">
