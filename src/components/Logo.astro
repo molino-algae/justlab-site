@@ -3,15 +3,21 @@
  * Placeholder mark — an open padlock ("unlocks") holding a leaf ("sustainable").
  * Swap for the lab's official SVG when it lands in src/assets/logos/.
  * variant: "full" (icon + wordmark) | "icon"
+ * animate: draw the mark in when it scrolls into view (used in the footer)
  */
 interface Props {
   variant?: "full" | "icon";
+  animate?: boolean;
   class?: string;
 }
-const { variant = "full", class: className } = Astro.props;
+const { variant = "full", animate = false, class: className } = Astro.props;
 ---
 
-<span class:list={["logo", className]} data-variant={variant}>
+<span
+  class:list={["logo", className, { anim: animate }]}
+  data-variant={variant}
+  data-reveal={animate ? "" : undefined}
+>
   <svg
     class="logo-mark"
     viewBox="0 0 40 48"
@@ -19,28 +25,27 @@ const { variant = "full", class: className } = Astro.props;
     aria-label="JUST Lab"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <!-- open shackle -->
     <path
+      class="shackle"
       d="M12 21 V14 a8 8 0 0 1 16 0 V18"
+      pathLength="1"
       fill="none"
       stroke="currentColor"
       stroke-width="3.4"
-      stroke-linecap="round"
-    ></path>
-    <!-- body -->
-    <rect x="4" y="20" width="32" height="26" rx="8" fill="currentColor"></rect>
-    <!-- leaf, knocked out of the body -->
+      stroke-linecap="round"></path>
+    <rect class="body" x="4" y="20" width="32" height="26" rx="8" fill="currentColor"></rect>
     <path
+      class="leaf"
       d="M20 25.5 C 13.5 29.5, 13.5 40.5, 20 43 C 26.5 40.5, 26.5 29.5, 20 25.5 Z"
-      fill="var(--logo-knockout, var(--ground))"
-    ></path>
+      fill="var(--logo-knockout, var(--ground))"></path>
     <path
+      class="vein"
       d="M20 27 V41.5 M20 33 l4 -2 M20 36 l-4 -2"
+      pathLength="1"
       fill="none"
       stroke="currentColor"
       stroke-width="1.6"
-      stroke-linecap="round"
-    ></path>
+      stroke-linecap="round"></path>
   </svg>
   {
     variant === "full" && (
@@ -62,6 +67,7 @@ const { variant = "full", class: className } = Astro.props;
     width: 1.55em;
     height: 1.86em;
     flex: none;
+    overflow: visible;
   }
   .logo-word {
     font-family: var(--font-display);
@@ -74,5 +80,51 @@ const { variant = "full", class: className } = Astro.props;
     font-weight: 600;
     color: var(--accent);
     margin-left: 0.12em;
+  }
+
+  /* draw-in (footer) */
+  :global(html.js) .logo.anim .shackle,
+  :global(html.js) .logo.anim .vein {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.1s var(--ease) 0.15s;
+  }
+  :global(html.js) .logo.anim .body,
+  :global(html.js) .logo.anim .leaf {
+    opacity: 0;
+    transform: scale(0.9);
+    transform-origin: 20px 33px;
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease);
+  }
+  :global(html.js) .logo.anim .logo-word {
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity 0.5s var(--ease) 0.4s,
+      transform 0.5s var(--ease) 0.4s;
+  }
+  :global(html.js) .logo.anim.in .shackle,
+  :global(html.js) .logo.anim.in .vein {
+    stroke-dashoffset: 0;
+  }
+  :global(html.js) .logo.anim.in .body,
+  :global(html.js) .logo.anim.in .leaf {
+    opacity: 1;
+    transform: scale(1);
+  }
+  :global(html.js) .logo.anim.in .logo-word {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .logo.anim * {
+      opacity: 1 !important;
+      transform: none !important;
+      stroke-dashoffset: 0 !important;
+      transition: none !important;
+    }
   }
 </style>

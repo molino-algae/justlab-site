@@ -4,12 +4,23 @@ import SectionHead from "../components/SectionHead.astro";
 import { site, publications, type Publication } from "../lib/data";
 
 const pubs = publications.slice().sort((a, b) => b.year - a.year);
+
+const years = [...new Set(pubs.map((p) => p.year))];
+const AREA_LABELS: Record<string, string> = {
+  "genetic-engineering": "Genetic engineering",
+  "recombinant-proteins": "Recombinant proteins",
+  bioprocess: "Bioprocess",
+  biorefineries: "Biorefineries",
+};
+const areas = [...new Set(pubs.flatMap((p) => p.areas ?? []))].filter(
+  (a) => a in AREA_LABELS,
+);
+
 const byYear = new Map<number, Publication[]>();
 for (const p of pubs) {
   if (!byYear.has(p.year)) byYear.set(p.year, []);
   byYear.get(p.year)!.push(p);
 }
-const years = [...byYear.keys()];
 ---
 
 <Base
@@ -31,37 +42,151 @@ const years = [...byYear.keys()];
         <p class="mono todo">TODO: add the lab's Google Scholar profile URL to site.yaml</p>
       )
     }
+
+    <div class="filters" id="pub-filters" role="group" aria-label="Filter publications">
+      <button class="chip" data-filter="all" aria-pressed="true" type="button">All</button>
+      {
+        years.map((y) => (
+          <button class="chip" data-filter={`y:${y}`} aria-pressed="false" type="button">
+            {y}
+          </button>
+        ))
+      }
+      <span class="sep" aria-hidden="true"></span>
+      {
+        areas.map((a) => (
+          <button class="chip" data-filter={`a:${a}`} aria-pressed="false" type="button">
+            {AREA_LABELS[a]}
+          </button>
+        ))
+      }
+    </div>
+    <p class="count mono" id="pub-count" aria-live="polite"></p>
   </section>
 
-  {
-    years.map((y) => (
-      <section class="wrap yr">
-        <h2>{y}</h2>
-        <ul>
-          {byYear.get(y)!.map((p) => (
-            <li class:list={{ feat: p.featured }}>
-              <div class="cite">
-                <a href={`https://doi.org/${p.doi}`}>{p.title}</a>
-                <p class="meta">
-                  {p.authors} · <i>{p.venue}</i>
-                  {p.volume ? ` ${p.volume}` : ""}
-                  {p.pages ? `, ${p.pages}` : ""} ({p.year})
-                </p>
-                {p.note && <p class="note">{p.note}</p>}
-                {p.featured && p.highlight && (
-                  <p class="hl">{p.highlight}</p>
-                )}
-              </div>
-              <span class="mono type">{p.type}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))
-  }
+  <div id="pub-list">
+    {
+      [...byYear.keys()].map((y) => (
+        <section class="wrap yr" data-year-group={y}>
+          <h2>{y}</h2>
+          <ul>
+            {byYear.get(y)!.map((p) => (
+              <li
+                class:list={{ feat: p.featured }}
+                data-year={p.year}
+                data-areas={(p.areas ?? []).join(" ")}
+              >
+                <div class="cite">
+                  <a href={`https://doi.org/${p.doi}`}>{p.title}</a>
+                  <p class="meta">
+                    {p.authors} · <i>{p.venue}</i>
+                    {p.volume ? ` ${p.volume}` : ""}
+                    {p.pages ? `, ${p.pages}` : ""} ({p.year})
+                  </p>
+                  {p.note && <p class="note">{p.note}</p>}
+                  {p.featured && p.highlight && <p class="hl">{p.highlight}</p>}
+                </div>
+                <span class="mono type">{p.type}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
 </Base>
 
+<script>
+  const filters = document.getElementById("pub-filters");
+  const items = Array.from(
+    document.querySelectorAll<HTMLLIElement>("#pub-list li"),
+  );
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-year-group]"),
+  );
+  const countEl = document.getElementById("pub-count");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function apply(filter: string) {
+    let shown = 0;
+    items.forEach((li) => {
+      const match =
+        filter === "all" ||
+        (filter.startsWith("y:") && li.dataset.year === filter.slice(2)) ||
+        (filter.startsWith("a:") &&
+          (li.dataset.areas ?? "").split(" ").includes(filter.slice(2)));
+      li.hidden = !match;
+      if (match) {
+        shown++;
+        if (!reduce) {
+          li.style.animation = "none";
+          void li.offsetWidth;
+          li.style.animation = `pub-in .45s var(--ease) backwards`;
+          li.style.animationDelay = `${shown * 45}ms`;
+        }
+      }
+    });
+    groups.forEach((g) => {
+      g.hidden = !g.querySelector("li:not([hidden])");
+    });
+    if (countEl)
+      countEl.textContent =
+        filter === "all" ? "" : `${shown} publication${shown === 1 ? "" : "s"}`;
+  }
+
+  filters?.addEventListener("click", (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(".chip");
+    if (!btn) return;
+    filters
+      .querySelectorAll(".chip")
+      .forEach((c) => c.setAttribute("aria-pressed", String(c === btn)));
+    apply(btn.dataset.filter!);
+  });
+</script>
+
 <style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+  .sep {
+    width: 1px;
+    align-self: stretch;
+    background: var(--line);
+    margin-inline: 0.3rem;
+  }
+  .chip {
+    font: inherit;
+    font-size: 0.82rem;
+    padding: 0.36rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+  }
+  .chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .chip[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--ground);
+  }
+  .count {
+    color: var(--ink-faint);
+    min-height: 1.2em;
+    margin-top: 0.8rem;
+  }
+
   .yr {
     padding-block: 1.5rem clamp(1.5rem, 4vw, 2.5rem);
     border-top: 1px solid var(--line);
@@ -114,6 +239,14 @@ const years = [...byYear.keys()];
   .todo {
     color: var(--gold);
   }
+
+  @keyframes pub-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
   @media (max-width: 620px) {
     li {
       flex-direction: column;

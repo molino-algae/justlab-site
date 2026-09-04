@@ -4,6 +4,7 @@ import Base from "../layouts/Base.astro";
 import HeroCanvas from "../components/HeroCanvas.astro";
 import SectionHead from "../components/SectionHead.astro";
 import PersonCard from "../components/PersonCard.astro";
+import AreaIcon from "../components/AreaIcon.astro";
 import { site, publications } from "../lib/data";
 import { href } from "../lib/url";
 
@@ -35,7 +36,10 @@ const spotlight = featured[0];
       {
         research.map((r) => (
           <a class="area" href={`${href("/research")}#${r.data.slug}`}>
-            <span class="mono">0{r.data.order}</span>
+            <span class="area-top">
+              <AreaIcon name={r.data.slug} />
+              <span class="mono">0{r.data.order}</span>
+            </span>
             <h3>{r.data.title}</h3>
             <p>{r.data.summary}</p>
           </a>
@@ -153,8 +157,13 @@ const spotlight = featured[0];
   .area:hover {
     background: var(--surface-2);
   }
+  .area-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
   .area .mono {
-    color: var(--accent);
+    color: var(--ink-faint);
     font-size: 0.7rem;
   }
   .area h3 {

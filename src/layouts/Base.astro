@@ -44,6 +44,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
     <script is:inline>
       (function () {
+        document.documentElement.classList.add("js");
         try {
           var t = localStorage.getItem("jl-theme");
           if (t) document.documentElement.setAttribute("data-theme", t);
@@ -58,5 +59,27 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <Footer />
+
+    <script>
+      // One observer for every [data-reveal] element: adds `.in` when it scrolls
+      // into view (drives the draw-on icon animations, footer mark, etc.)
+      const els = document.querySelectorAll("[data-reveal]");
+      if (!("IntersectionObserver" in window) || els.length === 0) {
+        els.forEach((el) => el.classList.add("in"));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add("in");
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { threshold: 0.3, rootMargin: "0px 0px -8% 0px" },
+        );
+        els.forEach((el) => io.observe(el));
+      }
+    </script>
   </body>
 </html>
