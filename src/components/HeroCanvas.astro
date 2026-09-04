@@ -54,8 +54,10 @@ const { lede = site.description } = Astro.props;
     ph: number;
     spd: number;
     amb: boolean;
+    loose: boolean;
   };
   let cells: Cell[] = [];
+  let bubbles: { x: number; y: number; r: number; v: number }[] = [];
 
   function size() {
     if (!cv || !ctx) return;
@@ -63,7 +65,7 @@ const { lede = site.description } = Astro.props;
     const r = cv.getBoundingClientRect();
     W = Math.max(1, Math.round(r.width));
     H = Math.max(1, Math.round(r.height));
-    wordY = H * 0.32;
+    wordY = H * 0.34;
     cv.width = W * DPR;
     cv.height = H * DPR;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -75,7 +77,7 @@ const { lede = site.description } = Astro.props;
     off.height = H;
     const oc = off.getContext("2d", { willReadFrequently: true });
     if (!oc) return [];
-    const fs = Math.max(58, Math.min(W * 0.185, 250));
+    const fs = Math.max(60, Math.min(W * 0.2, 270));
     oc.font = `700 ${fs}px "Fraunces", Georgia, serif`;
     oc.textAlign = "center";
     oc.textBaseline = "middle";
@@ -87,11 +89,11 @@ const { lede = site.description } = Astro.props;
     } catch {
       return [];
     }
-    const step = Math.max(3, Math.round(W / 420));
+    const step = Math.max(2, Math.round(W / 620));
     const pts: { x: number; y: number }[] = [];
     for (let y = 0; y < H; y += step)
       for (let x = 0; x < W; x += step)
-        if (data[(y * W + x) * 4 + 3] > 128) pts.push({ x, y });
+        if (data[(y * W + x) * 4 + 3] > 140) pts.push({ x, y });
     return pts;
   }
 
@@ -105,24 +107,26 @@ const { lede = site.description } = Astro.props;
 
   function seed(scatter: boolean) {
     const targets = wordTargets();
-    const WORD = Math.min(targets.length, Math.round((W * H) / 175));
-    const AMB = Math.round(W / 26);
+    const WORD = Math.min(targets.length, Math.round((W * H) / 85));
+    const AMB = Math.round(W / 24);
     cells = [];
     for (let i = 0; i < WORD; i++) {
       const t = targets[(Math.random() * targets.length) | 0];
       const start = scatter
         ? edgePoint()
-        : { x: t.x + (Math.random() - 0.5) * 22, y: t.y + (Math.random() - 0.5) * 22 };
+        : { x: t.x + (Math.random() - 0.5) * 16, y: t.y + (Math.random() - 0.5) * 16 };
       cells.push({
         x: start.x,
         y: start.y,
         vx: 0,
         vy: 0,
-        tx: t.x + (Math.random() - 0.5) * 3,
-        ty: t.y + (Math.random() - 0.5) * 3,
+        tx: t.x + (Math.random() - 0.5) * 2,
+        ty: t.y + (Math.random() - 0.5) * 2,
         ph: Math.random() * 6.28,
         spd: 0.7 + Math.random() * 0.6,
         amb: false,
+        // ~12% stay a touch restless so the formed word still breathes
+        loose: Math.random() < 0.12,
       });
     }
     for (let i = 0; i < AMB; i++) {
@@ -136,8 +140,16 @@ const { lede = site.description } = Astro.props;
         ph: Math.random() * 6.28,
         spd: 1,
         amb: true,
+        loose: false,
       });
     }
+    // rising bubble column on the left — the photobioreactor nod
+    bubbles = Array.from({ length: 20 }, () => ({
+      x: W * (0.02 + Math.random() * 0.08),
+      y: Math.random() * H,
+      r: 1.2 + Math.random() * 3.2,
+      v: 0.3 + Math.random() * 0.95,
+    }));
   }
 
   function step(t: number) {
@@ -154,18 +166,28 @@ const { lede = site.description } = Astro.props;
       const dx = c.tx - c.x;
       const dy = c.ty - c.y;
       const d = Math.hypot(dx, dy) || 1;
-      // phototaxis: steer toward the target light; ease off once in the aggregate
-      const steer = d > 36 ? 0.055 : 0.014;
+      const near = d < 22;
+      // phototaxis: steer hard toward the target light, then lock on tight
+      const steer = near ? 0.16 : 0.06;
       c.vx += (dx / d) * steer * c.spd;
       c.vy += (dy / d) * steer * c.spd;
-      // run-and-tumble noise — stronger in transit, a gentle mill once arrived
-      const tumble = d > 36 ? 0.22 : 0.05;
+      // run-and-tumble noise: strong in transit, almost nothing once arrived
+      const tumble = near ? (c.loose ? 0.05 : 0.012) : 0.24;
       c.vx += (Math.random() - 0.5) * tumble;
       c.vy += (Math.random() - 0.5) * tumble;
-      c.vx *= 0.9;
-      c.vy *= 0.9;
-      c.x += c.vx + Math.sin(t * 0.001 * c.spd + c.ph) * (d < 36 ? 0.25 : 0);
+      c.vx *= near ? 0.72 : 0.9;
+      c.vy *= near ? 0.72 : 0.9;
+      const bob = near && c.loose ? Math.sin(t * 0.001 * c.spd + c.ph) * 0.18 : 0;
+      c.x += c.vx + bob;
       c.y += c.vy;
+    }
+    for (const b of bubbles) {
+      b.y -= b.v;
+      b.x += Math.sin(b.y * 0.03) * 0.22;
+      if (b.y < -12) {
+        b.y = H + 12;
+        b.x = W * (0.02 + Math.random() * 0.08);
+      }
     }
   }
 
@@ -173,20 +195,29 @@ const { lede = site.description } = Astro.props;
     if (!ctx) return;
     ctx.clearRect(0, 0, W, H);
     // the light the cells swim toward
-    const g = ctx.createRadialGradient(W / 2, wordY, 0, W / 2, wordY, W * 0.4);
-    g.addColorStop(0, `rgba(${GREEN},0.1)`);
+    const g = ctx.createRadialGradient(W / 2, wordY, 0, W / 2, wordY, W * 0.42);
+    g.addColorStop(0, `rgba(${GREEN},0.09)`);
     g.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, W, H);
+
     // cells — additive, so overlap reads as accumulating density
     ctx.globalCompositeOperation = "lighter";
     for (const c of cells) {
       ctx.beginPath();
-      ctx.fillStyle = c.amb ? `rgba(${GREEN},0.045)` : `rgba(${GREEN},0.11)`;
-      ctx.arc(c.x, c.y, c.amb ? 5 : 2.3, 0, 6.2832);
+      ctx.fillStyle = c.amb ? `rgba(${GREEN},0.04)` : `rgba(${GREEN},0.14)`;
+      ctx.arc(c.x, c.y, c.amb ? 5 : 1.8, 0, 6.2832);
       ctx.fill();
     }
     ctx.globalCompositeOperation = "source-over";
+
+    // bubbles
+    for (const b of bubbles) {
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(184,255,228,0.32)";
+      ctx.arc(b.x, b.y, b.r, 0, 6.2832);
+      ctx.fill();
+    }
   }
 
   function loop(t: number) {
@@ -205,7 +236,7 @@ const { lede = site.description } = Astro.props;
     // blank — for reduced-motion, fast scrollers, and any context where
     // requestAnimationFrame is throttled (hidden tab, thumbnail).
     if (!scatter || reduce) {
-      for (let i = 0; i < 110; i++) step(i * 16);
+      for (let i = 0; i < 180; i++) step(i * 16);
       paint();
       if (reduce) return;
     }
@@ -246,7 +277,8 @@ const { lede = site.description } = Astro.props;
     color: var(--hero-ink);
     overflow: hidden;
     isolation: isolate;
-    min-height: clamp(620px, 90vh, 880px);
+    min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -289,11 +321,11 @@ const { lede = site.description } = Astro.props;
   .hero-inner {
     position: relative;
     z-index: 2;
-    padding-block: 2.5rem 3.5rem;
+    padding-block: 2rem 3rem;
   }
   /* reserves the vertical band where the wordmark forms on the canvas */
   .word-space {
-    height: clamp(150px, 27vh, 280px);
+    height: clamp(150px, 30vh, 320px);
   }
   .eyebrow {
     color: var(--hero-mono);
