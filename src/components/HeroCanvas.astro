@@ -11,6 +11,7 @@ const { lede = site.description } = Astro.props;
   <canvas id="hero-canvas" aria-hidden="true"></canvas>
   <div class="hero-inner wrap">
     <span class="eyebrow mono">{site.institution}</span>
+    <div class="word-space" aria-hidden="true"></div>
     <h1>{site.tagline}.</h1>
     <p class="lede">{lede}</p>
     <p class="acro mono">{site.acronym}</p>
@@ -19,23 +20,42 @@ const { lede = site.description } = Astro.props;
       <a class="btn btn-ghost" href={href("/contact")}>Work with us</a>
     </div>
   </div>
+  <button class="replay mono" id="hero-replay" type="button">Replay ↻</button>
   <div class="scrollcue mono" aria-hidden="true"><span>scroll</span><i></i></div>
 </header>
 
 <script>
-  // Ambient "culture under the light": drifting cells, a rising bubble column,
-  // faint links between close cells. Degrades to a single static frame under
-  // prefers-reduced-motion.
+  /**
+   * Phototaxis hero: microalgae cells swim in from the edges toward a light and
+   * accumulate into the wordmark "JUSTLAB". Rendered with additive blending, so
+   * what you see is density concentrating — the cells getting together — not
+   * individual dots. After forming they keep milling, so the word stays alive.
+   * (Based on the lab's real phototaxis shape-forming experiment.)
+   */
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const cv = document.getElementById("hero-canvas") as HTMLCanvasElement | null;
   const ctx = cv?.getContext("2d") ?? null;
 
+  const GREEN = "90,235,175";
   let W = 0,
     H = 0,
     DPR = 1,
-    running = false;
-  let cells: { x: number; y: number; vx: number; vy: number; r: number; a: number }[] = [];
-  let bubbles: { x: number; y: number; r: number; v: number }[] = [];
+    wordY = 0,
+    running = false,
+    raf = 0;
+
+  type Cell = {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    tx: number;
+    ty: number;
+    ph: number;
+    spd: number;
+    amb: boolean;
+  };
+  let cells: Cell[] = [];
 
   function size() {
     if (!cv || !ctx) return;
@@ -43,107 +63,179 @@ const { lede = site.description } = Astro.props;
     const r = cv.getBoundingClientRect();
     W = Math.max(1, Math.round(r.width));
     H = Math.max(1, Math.round(r.height));
+    wordY = H * 0.32;
     cv.width = W * DPR;
     cv.height = H * DPR;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   }
 
-  function seed() {
-    const n = Math.round((W * H) / 26000);
-    cells = Array.from({ length: Math.min(n, 90) }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.18,
-      vy: (Math.random() - 0.5) * 0.18,
-      r: 2 + Math.random() * 10,
-      a: 0.05 + Math.random() * 0.1,
-    }));
-    bubbles = Array.from({ length: 18 }, () => ({
-      x: W * (0.03 + Math.random() * 0.07),
-      y: Math.random() * H,
-      r: 1.3 + Math.random() * 3,
-      v: 0.3 + Math.random() * 0.9,
-    }));
+  function wordTargets(): { x: number; y: number }[] {
+    const off = document.createElement("canvas");
+    off.width = W;
+    off.height = H;
+    const oc = off.getContext("2d", { willReadFrequently: true });
+    if (!oc) return [];
+    const fs = Math.max(58, Math.min(W * 0.185, 250));
+    oc.font = `700 ${fs}px "Fraunces", Georgia, serif`;
+    oc.textAlign = "center";
+    oc.textBaseline = "middle";
+    oc.fillStyle = "#fff";
+    oc.fillText("JUSTLAB", Math.round(W / 2), Math.round(wordY));
+    let data: Uint8ClampedArray;
+    try {
+      data = oc.getImageData(0, 0, W, H).data;
+    } catch {
+      return [];
+    }
+    const step = Math.max(3, Math.round(W / 420));
+    const pts: { x: number; y: number }[] = [];
+    for (let y = 0; y < H; y += step)
+      for (let x = 0; x < W; x += step)
+        if (data[(y * W + x) * 4 + 3] > 128) pts.push({ x, y });
+    return pts;
   }
 
-  function frame(t: number) {
+  function edgePoint(): { x: number; y: number } {
+    const s = Math.random() * 4;
+    if (s < 1) return { x: Math.random() * W, y: -30 };
+    if (s < 2) return { x: Math.random() * W, y: H + 30 };
+    if (s < 3) return { x: -30, y: Math.random() * H };
+    return { x: W + 30, y: Math.random() * H };
+  }
+
+  function seed(scatter: boolean) {
+    const targets = wordTargets();
+    const WORD = Math.min(targets.length, Math.round((W * H) / 175));
+    const AMB = Math.round(W / 26);
+    cells = [];
+    for (let i = 0; i < WORD; i++) {
+      const t = targets[(Math.random() * targets.length) | 0];
+      const start = scatter
+        ? edgePoint()
+        : { x: t.x + (Math.random() - 0.5) * 22, y: t.y + (Math.random() - 0.5) * 22 };
+      cells.push({
+        x: start.x,
+        y: start.y,
+        vx: 0,
+        vy: 0,
+        tx: t.x + (Math.random() - 0.5) * 3,
+        ty: t.y + (Math.random() - 0.5) * 3,
+        ph: Math.random() * 6.28,
+        spd: 0.7 + Math.random() * 0.6,
+        amb: false,
+      });
+    }
+    for (let i = 0; i < AMB; i++) {
+      cells.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        tx: 0,
+        ty: 0,
+        ph: Math.random() * 6.28,
+        spd: 1,
+        amb: true,
+      });
+    }
+  }
+
+  function step(t: number) {
+    for (const c of cells) {
+      if (c.amb) {
+        c.x += c.vx;
+        c.y += c.vy;
+        if (c.x < -20) c.x = W + 20;
+        if (c.x > W + 20) c.x = -20;
+        if (c.y < -20) c.y = H + 20;
+        if (c.y > H + 20) c.y = -20;
+        continue;
+      }
+      const dx = c.tx - c.x;
+      const dy = c.ty - c.y;
+      const d = Math.hypot(dx, dy) || 1;
+      // phototaxis: steer toward the target light; ease off once in the aggregate
+      const steer = d > 36 ? 0.055 : 0.014;
+      c.vx += (dx / d) * steer * c.spd;
+      c.vy += (dy / d) * steer * c.spd;
+      // run-and-tumble noise — stronger in transit, a gentle mill once arrived
+      const tumble = d > 36 ? 0.22 : 0.05;
+      c.vx += (Math.random() - 0.5) * tumble;
+      c.vy += (Math.random() - 0.5) * tumble;
+      c.vx *= 0.9;
+      c.vy *= 0.9;
+      c.x += c.vx + Math.sin(t * 0.001 * c.spd + c.ph) * (d < 36 ? 0.25 : 0);
+      c.y += c.vy;
+    }
+  }
+
+  function paint() {
     if (!ctx) return;
     ctx.clearRect(0, 0, W, H);
-
-    // links between nearby cells
-    ctx.strokeStyle = "rgba(90,235,175,0.05)";
-    ctx.lineWidth = 1;
-    for (let i = 0; i < cells.length; i++) {
-      for (let j = i + 1; j < cells.length; j++) {
-        const dx = cells[i].x - cells[j].x;
-        const dy = cells[i].y - cells[j].y;
-        const d2 = dx * dx + dy * dy;
-        if (d2 < 15000) {
-          ctx.globalAlpha = 1 - d2 / 15000;
-          ctx.beginPath();
-          ctx.moveTo(cells[i].x, cells[i].y);
-          ctx.lineTo(cells[j].x, cells[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-    ctx.globalAlpha = 1;
-
+    // the light the cells swim toward
+    const g = ctx.createRadialGradient(W / 2, wordY, 0, W / 2, wordY, W * 0.4);
+    g.addColorStop(0, `rgba(${GREEN},0.1)`);
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+    // cells — additive, so overlap reads as accumulating density
+    ctx.globalCompositeOperation = "lighter";
     for (const c of cells) {
-      c.x += c.vx;
-      c.y += c.vy;
-      if (c.x < -20) c.x = W + 20;
-      if (c.x > W + 20) c.x = -20;
-      if (c.y < -20) c.y = H + 20;
-      if (c.y > H + 20) c.y = -20;
-      const pulse = 1 + Math.sin(t * 0.0008 + c.x) * 0.08;
       ctx.beginPath();
-      ctx.fillStyle = `rgba(90,235,175,${c.a})`;
-      ctx.arc(c.x, c.y, c.r * pulse, 0, 6.2832);
+      ctx.fillStyle = c.amb ? `rgba(${GREEN},0.045)` : `rgba(${GREEN},0.11)`;
+      ctx.arc(c.x, c.y, c.amb ? 5 : 2.3, 0, 6.2832);
       ctx.fill();
     }
+    ctx.globalCompositeOperation = "source-over";
+  }
 
-    for (const b of bubbles) {
-      b.y -= b.v;
-      b.x += Math.sin(b.y * 0.03) * 0.25;
-      if (b.y < -10) {
-        b.y = H + 10;
-        b.x = W * (0.03 + Math.random() * 0.07);
-      }
-      ctx.beginPath();
-      ctx.fillStyle = "rgba(180,255,225,0.3)";
-      ctx.arc(b.x, b.y, b.r, 0, 6.2832);
-      ctx.fill();
+  function loop(t: number) {
+    step(t);
+    paint();
+    if (running) raf = requestAnimationFrame(loop);
+  }
+
+  function start(scatter: boolean) {
+    if (!cv || !ctx) return;
+    seed(scatter);
+    cancelAnimationFrame(raf);
+    running = false;
+
+    // Always render a settled frame synchronously first, so the hero is never
+    // blank — for reduced-motion, fast scrollers, and any context where
+    // requestAnimationFrame is throttled (hidden tab, thumbnail).
+    if (!scatter || reduce) {
+      for (let i = 0; i < 110; i++) step(i * 16);
+      paint();
+      if (reduce) return;
     }
 
-    if (running) requestAnimationFrame(frame);
+    running = true;
+    raf = requestAnimationFrame(loop);
   }
 
   function boot() {
-    if (!cv || !ctx) return;
     size();
-    seed();
-    if (reduce) {
-      frame(0);
-      return;
-    }
-    if (!running) {
-      running = true;
-      requestAnimationFrame(frame);
-    }
+    // page load: cells start near the word so it's readable at once, then mill.
+    // the full "swim in from the edges" plays on the Replay button.
+    start(false);
   }
 
   if (cv) {
-    boot();
+    if (document.fonts?.ready) document.fonts.ready.then(boot);
+    else addEventListener("load", boot);
+
     let rt: ReturnType<typeof setTimeout>;
     addEventListener("resize", () => {
       clearTimeout(rt);
       rt = setTimeout(() => {
         size();
-        seed();
-        if (reduce) frame(0);
+        start(false);
       }, 200);
     });
+    document
+      .getElementById("hero-replay")
+      ?.addEventListener("click", () => start(true));
   }
 </script>
 
@@ -154,7 +246,7 @@ const { lede = site.description } = Astro.props;
     color: var(--hero-ink);
     overflow: hidden;
     isolation: isolate;
-    min-height: clamp(560px, 86vh, 780px);
+    min-height: clamp(620px, 90vh, 880px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -166,18 +258,17 @@ const { lede = site.description } = Astro.props;
     inset: -20%;
     z-index: 0;
     background:
-      radial-gradient(38% 40% at 22% 30%, rgba(28, 125, 85, 0.5), transparent 70%),
-      radial-gradient(32% 38% at 78% 66%, rgba(20, 92, 66, 0.5), transparent 70%),
-      radial-gradient(30% 30% at 60% 20%, rgba(60, 200, 150, 0.25), transparent 70%);
-    filter: blur(60px);
-    animation: mesh 28s var(--ease) infinite alternate;
+      radial-gradient(38% 40% at 22% 34%, rgba(28, 125, 85, 0.42), transparent 70%),
+      radial-gradient(34% 40% at 80% 70%, rgba(20, 92, 66, 0.42), transparent 70%);
+    filter: blur(70px);
+    animation: mesh 30s var(--ease) infinite alternate;
   }
   @keyframes mesh {
     from {
       transform: translate3d(-3%, -2%, 0) scale(1);
     }
     to {
-      transform: translate3d(4%, 3%, 0) scale(1.14);
+      transform: translate3d(3%, 3%, 0) scale(1.12);
     }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -198,22 +289,25 @@ const { lede = site.description } = Astro.props;
   .hero-inner {
     position: relative;
     z-index: 2;
-    padding-block: 3rem 3.5rem;
+    padding-block: 2.5rem 3.5rem;
+  }
+  /* reserves the vertical band where the wordmark forms on the canvas */
+  .word-space {
+    height: clamp(150px, 27vh, 280px);
   }
   .eyebrow {
     color: var(--hero-mono);
     display: block;
-    margin-bottom: 1.4rem;
   }
   .hero h1 {
-    font-size: clamp(2.6rem, 7.5vw, 5.4rem);
+    font-size: clamp(1.9rem, 4.6vw, 3.3rem);
     max-width: 15ch;
   }
   .lede {
     color: var(--hero-soft);
-    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
     max-width: 46ch;
-    margin-top: 1.4rem;
+    margin-top: 1.3rem;
   }
   .acro {
     color: var(--hero-mono);
@@ -232,6 +326,23 @@ const { lede = site.description } = Astro.props;
   .hero .btn-ghost {
     border-color: rgba(159, 220, 196, 0.4);
     color: var(--hero-ink);
+  }
+
+  .replay {
+    position: absolute;
+    right: var(--pad);
+    bottom: 1.4rem;
+    z-index: 2;
+    background: transparent;
+    border: 1px solid rgba(159, 220, 196, 0.35);
+    color: var(--hero-soft);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    cursor: pointer;
+  }
+  .replay:hover {
+    color: var(--hero-ink);
+    border-color: var(--hero-particle);
   }
 
   .scrollcue {
@@ -257,12 +368,11 @@ const { lede = site.description } = Astro.props;
       transform: scaleY(0);
       transform-origin: top;
     }
-    45% {
-      transform: scaleY(1);
-      transform-origin: top;
-    }
+    45%,
     55% {
       transform: scaleY(1);
+    }
+    55% {
       transform-origin: bottom;
     }
     100% {
@@ -273,6 +383,15 @@ const { lede = site.description } = Astro.props;
   @media (prefers-reduced-motion: reduce) {
     .scrollcue i {
       animation: none;
+    }
+    .replay {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .word-space {
+      height: 16vh;
     }
   }
 </style>
