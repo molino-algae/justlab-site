@@ -1,6 +1,28 @@
 ---
+import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import SectionHead from "../components/SectionHead.astro";
+import turbidostat from "../assets/resources/turbidostat.png";
+import microcentrifuge from "../assets/resources/microcentrifuge.png";
+import plateReader from "../assets/resources/plate-reader.png";
+
+const hardware = [
+  {
+    img: turbidostat,
+    name: "Turbidostat",
+    caption: "3D-printed housing with an optical density sensor, holding cultures at a set growth rate.",
+  },
+  {
+    img: microcentrifuge,
+    name: "Microcentrifuge",
+    caption: "Laser-cut and 3D-printed rotor, brushless motor, and an LCD readout — built from scratch.",
+  },
+  {
+    img: plateReader,
+    name: "Plate reader",
+    caption: "A 96-well fluorescence reader for screening, at a fraction of a commercial unit's cost.",
+  },
+];
 ---
 
 <Base
@@ -16,6 +38,29 @@ import SectionHead from "../components/SectionHead.astro";
   </section>
 
   <section class="wrap">
+    <h2 class="hw-h">Open hardware</h2>
+    <p class="hw-lead">
+      Lab equipment designed and built in-house — 3D-printed and laser-cut, at a
+      fraction of the commercial cost. Build files and guides are being prepared
+      for release.
+    </p>
+    <div class="hw-grid">
+      {
+        hardware.map((h) => (
+          <figure class="hw-card">
+            <Image src={h.img} alt={h.name} width={640} height={480} />
+            <figcaption>
+              <h3>{h.name}</h3>
+              <p>{h.caption}</p>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+    <p class="mono todo">TODO: add build files / repository links (GitHub or OSF) once published</p>
+  </section>
+
+  <section class="wrap">
     <div class="grid">
       <div class="card">
         <h3>Protocols</h3>
@@ -24,14 +69,6 @@ import SectionHead from "../components/SectionHead.astro";
           downstream processing — each linked to a document or protocols.io entry.
         </p>
         <p class="mono todo">TODO: add protocol links</p>
-      </div>
-      <div class="card">
-        <h3>Open hardware</h3>
-        <p>
-          Reactor designs, bills of materials, CAD files, and build guides —
-          including the modular 3D-printed photobioreactor.
-        </p>
-        <p class="mono todo">TODO: add repository links (GitHub / OSF)</p>
       </div>
       <div class="card">
         <h3>Datasets</h3>
@@ -58,6 +95,53 @@ import SectionHead from "../components/SectionHead.astro";
 </Base>
 
 <style>
+  .hw-h {
+    font-size: 1.4rem;
+  }
+  .hw-lead {
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin-top: 0.6rem;
+  }
+  .hw-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin-top: 1.6rem;
+  }
+  .hw-card {
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition:
+      transform 0.2s var(--ease),
+      border-color 0.2s;
+  }
+  .hw-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+  }
+  .hw-card :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+  .hw-card figcaption {
+    padding: 1.1rem 1.2rem 1.3rem;
+  }
+  .hw-card h3 {
+    font-size: 1.02rem;
+    margin-bottom: 0.4rem;
+  }
+  .hw-card p {
+    color: var(--ink-soft);
+    font-size: 0.87rem;
+    margin: 0;
+  }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

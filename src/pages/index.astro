@@ -26,6 +26,29 @@ const spotlight = featured[0];
 <Base heroNav={true}>
   <HeroCanvas />
 
+  <section class="wrap phototaxis">
+    <div class="pt-video">
+      <video
+        controls
+        preload="metadata"
+        poster={href("/videos/phototaxis-poster.jpg")}
+        aria-label="Microalgae cells responding to light in a phototaxis assay"
+      >
+        <source src={href("/videos/phototaxis.mp4")} type="video/mp4" />
+      </video>
+    </div>
+    <div class="pt-copy">
+      <span class="kicker mono">The real experiment</span>
+      <h2>The hero above is not just an animation</h2>
+      <p class="prose">
+        Microalgae are phototactic — they swim toward light. By controlling
+        where light falls, the lab can make a culture concentrate itself into
+        a chosen shape. The forming wordmark on this page is modelled on that
+        behaviour; this is the real thing.
+      </p>
+    </div>
+  </section>
+
   <section class="wrap">
     <SectionHead
       kicker="What we do"
@@ -129,6 +152,35 @@ const spotlight = featured[0];
 </Base>
 
 <style>
+  .phototaxis {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+  }
+  @media (max-width: 820px) {
+    .phototaxis {
+      grid-template-columns: 1fr;
+    }
+  }
+  .pt-video video {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    display: block;
+    background: #05130d;
+  }
+  .pt-copy h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    margin-top: 0.6rem;
+    max-width: 20ch;
+  }
+  .pt-copy p {
+    margin-top: 1rem;
+    color: var(--ink-soft);
+  }
+
   .areas {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
