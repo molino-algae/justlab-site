@@ -5,7 +5,7 @@ category: undergrad
 areas: [genetic-engineering, recombinant-proteins]
 startDate: 2026-03
 order: 2
-photo:
+photo: celina-benites.jpg
 links:
   email: celinabenites@usp.br
   lattes: https://lattes.cnpq.br/7349311118431088

@@ -5,7 +5,7 @@ category: undergrad
 areas: [genetic-engineering, recombinant-proteins]
 startDate: 2026-04
 order: 3
-photo:
+photo: gabriela-kiura.jpg
 links:
   email: gabrielatk@usp.br
   orcid: https://orcid.org/0009-0008-4849-2960

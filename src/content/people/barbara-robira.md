@@ -5,7 +5,7 @@ category: undergrad
 areas: [genetic-engineering, recombinant-proteins, biorefineries]
 startDate: 2026-03
 order: 1
-photo:
+photo: barbara-robira.jpg
 links:
   email: barbaramarquesdacostarobira@usp.br
   orcid: https://orcid.org/0009-0004-0854-339X

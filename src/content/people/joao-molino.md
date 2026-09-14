@@ -4,7 +4,7 @@ role: Principal Investigator
 category: pi
 status: FAPESP Young Investigator
 order: 1
-photo: # joao-molino.jpg  (add a square photo to src/assets/people/)
+photo: joao-molino.jpg
 links:
   email: molino@usp.br
   orcid: # https://orcid.org/0000-0000-0000-0000
