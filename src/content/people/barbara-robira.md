@@ -8,6 +8,10 @@ order: 1
 photo:
 links:
   email: barbaramarquesdacostarobira@usp.br
+  orcid: https://orcid.org/0009-0004-0854-339X
+  lattes: https://lattes.cnpq.br/1746471524985289
+  scholar: https://scholar.google.com.br/citations?user=etQe_N0AAAAJ&hl=pt-BR
+  linkedin: https://www.linkedin.com/in/barbara-marques-da-costa-robira-042a2632b
 project:
   title: >-
     Development of a Genetic Engineering Platform in Dunaliella salina for

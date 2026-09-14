@@ -17,24 +17,21 @@ await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1.5 });
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function shot(name, path, { scrollTo = 0, full = false, delay = 1500 } = {}) {
+async function shot(name, path, { scrollTo = 0, height, delay = 1200 } = {}) {
+  if (height) await page.setViewport({ width: 1440, height, deviceScaleFactor: 1.5 });
   await page.goto(BASE + path, { waitUntil: "networkidle0" });
-  await wait(delay); // let fonts + canvas + reveal animations settle
+  await wait(delay);
   if (scrollTo) {
     await page.evaluate((y) => window.scrollTo(0, y), scrollTo);
-    await wait(900);
+    await wait(500);
   }
-  await page.screenshot({ path: `${OUT}/${name}.png`, fullPage: full });
+  await page.screenshot({ path: `${OUT}/${name}.png` });
   console.log(`  ${name}.png`);
 }
 
-await shot("01-hero", "/", { delay: 2600 });
-await shot("02-home-research", "/", { scrollTo: 760 });
-await shot("03-home-full", "/", { full: true, delay: 2600 });
-await shot("04-research", "/research", { scrollTo: 420 });
-await shot("05-publications", "/publications", { scrollTo: 240 });
-await shot("06-people", "/people", { scrollTo: 120 });
-await shot("07-footer", "/", { scrollTo: 99999 });
+await shot("resources-hardware", "/resources", { height: 780, scrollTo: 260 });
+await shot("home-phototaxis-video", "/", { height: 820, scrollTo: 900 });
+await shot("home-hero", "/", { height: 900 });
 
 await browser.close();
 console.log("done -> shots/");

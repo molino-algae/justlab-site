@@ -8,6 +8,7 @@ order: 4
 photo:
 links:
   email: ldsardilli@usp.br
+  orcid: https://orcid.org/0009-0001-3596-6900
 ---
 
 Laura is a volunteer undergraduate researcher in Chemical Engineering working

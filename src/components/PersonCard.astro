@@ -29,6 +29,8 @@ const linkDefs = [
   ["scholar", "Scholar", d.links.scholar],
   ["lattes", "Lattes", d.links.lattes],
   ["fapesp", "FAPESP", d.links.fapesp],
+  ["linkedin", "LinkedIn", d.links.linkedin],
+  ["github", "GitHub", d.links.github],
   ["email", "Email", d.links.email ? `mailto:${d.links.email}` : undefined],
 ] as const;
 const links = linkDefs.filter(([, , href]) => href);

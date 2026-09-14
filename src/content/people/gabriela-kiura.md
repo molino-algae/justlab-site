@@ -8,6 +8,9 @@ order: 3
 photo:
 links:
   email: gabrielatk@usp.br
+  orcid: https://orcid.org/0009-0008-4849-2960
+  lattes: http://lattes.cnpq.br/2062434536613665
+  scholar: https://scholar.google.com/citations?hl=pt-BR&authuser=1&user=ktm4PhMAAAAJ
 project:
   title: >-
     Chlamydomonas reinhardtii as a Surface-Display Platform for Controlled

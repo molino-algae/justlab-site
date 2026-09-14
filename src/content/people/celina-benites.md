@@ -8,6 +8,7 @@ order: 2
 photo:
 links:
   email: celinabenites@usp.br
+  lattes: https://lattes.cnpq.br/7349311118431088
 project:
   title: >-
     Microalgal Cell-Surface Display of the Helminth-Derived TGF-β Mimic TGM1 for
