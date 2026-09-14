@@ -11,6 +11,7 @@ links:
   orcid: https://orcid.org/0009-0008-4849-2960
   lattes: http://lattes.cnpq.br/2062434536613665
   scholar: https://scholar.google.com/citations?hl=pt-BR&authuser=1&user=ktm4PhMAAAAJ
+  linkedin: https://www.linkedin.com/in/gabriela-tanaka-kiura-8a1005306
 project:
   title: >-
     Chlamydomonas reinhardtii as a Surface-Display Platform for Controlled
