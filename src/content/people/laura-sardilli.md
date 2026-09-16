@@ -5,10 +5,11 @@ category: undergrad
 areas: []
 startDate: 2026-09
 order: 4
-photo:
+photo: laura-sardilli.jpg
 links:
   email: ldsardilli@usp.br
   orcid: https://orcid.org/0009-0001-3596-6900
+  lattes: http://lattes.cnpq.br/5384451147036348
 ---
 
 Laura is a volunteer undergraduate researcher in Chemical Engineering working
