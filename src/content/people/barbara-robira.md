@@ -1,5 +1,5 @@
 ---
-name: Bárbara Marques da Costa Robira
+name: Barbara Marques da Costa Robira
 role: Volunteer Undergraduate Researcher · Chemical Engineering
 category: undergrad
 areas: [genetic-engineering, recombinant-proteins, biorefineries]
@@ -19,7 +19,7 @@ project:
     Biodegradation
 ---
 
-Bárbara develops genetic engineering tools for *Dunaliella salina*, focusing on
+Barbara develops genetic engineering tools for *Dunaliella salina*, focusing on
 recombinant expression of the PET-degrading enzyme PHL7. Her research explores
 this halotolerant microalga as a sustainable enzyme-production platform for
 polyethylene terephthalate biodegradation.
