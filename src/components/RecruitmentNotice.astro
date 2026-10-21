@@ -1,0 +1,23 @@
+---
+import { href } from "../lib/url";
+import { recruitment } from "../data/recruitment";
+---
+<aside class="wrap recruitment-notice" aria-label="Graduate fellowships">
+  <div class="notice">
+    <div>
+      <span class="mono">Graduate opportunities · FAPESP</span>
+      <h2>Two fellowships. One shared research ambition.</h2>
+      <p>One MSc and one direct PhD at JUST Lab, Lorena. Applications: {recruitment.windowLabel}.</p>
+    </div>
+    <a class="btn btn-primary" href={href("/opportunities/")}>Explore the positions <span aria-hidden="true">→</span></a>
+  </div>
+</aside>
+<style>
+  .recruitment-notice { padding-block: 2rem 0; }
+  .notice { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: clamp(1.4rem, 3vw, 2rem); border: 1px solid var(--line); border-radius: var(--radius); background: var(--accent-soft); }
+  .mono { color: var(--accent); }
+  h2 { font-size: clamp(1.35rem, 2.5vw, 1.8rem); margin-block: .6rem; }
+  p { color: var(--ink-soft); font-size: .95rem; margin: 0; }
+  .btn { flex: none; }
+  @media (max-width: 820px) { .notice { align-items: flex-start; flex-direction: column; gap: 1.2rem; } }
+</style>

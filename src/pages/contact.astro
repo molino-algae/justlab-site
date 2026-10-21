@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import SectionHead from "../components/SectionHead.astro";
 import { site } from "../lib/data";
+import { href } from "../lib/url";
 ---
 
 <Base
@@ -44,6 +45,11 @@ import { site } from "../lib/data";
     </div>
 
     <div>
+      <h3>Graduate fellowships · 2026</h3>
+      <p class="prose">One funded MSc and one direct PhD fellowship in microalgae biotechnology.
+        <a href={href("/opportunities/")}>View the projects, dates and application instructions →</a>
+      </p>
+
       <h3>Prospective students</h3>
       <p class="prose">
         The JUST Lab takes undergraduate researchers (iniciação científica) and
