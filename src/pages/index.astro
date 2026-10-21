@@ -32,7 +32,7 @@ const spotlight = featured[0];
   <HeroCanvas />
 
   <section class="wrap phototaxis">
-    <div class="pt-video">
+    <figure class="pt-video">
       <video
         controls
         preload="metadata"
@@ -41,7 +41,11 @@ const spotlight = featured[0];
       >
         <source src={href("/videos/phototaxis.mp4")} type="video/mp4" />
       </video>
-    </div>
+      <figcaption>
+        Shchelik, Molino and Gademann 2021, <i>Acta Biomaterialia</i> 136:99–110.
+        DOI <a href="https://doi.org/10.1016/j.actbio.2021.09.048" rel="noopener">10.1016/j.actbio.2021.09.048</a>
+      </figcaption>
+    </figure>
     <div class="pt-copy">
       <span class="kicker mono">The real experiment</span>
       <h2>The hero above is not just an animation</h2>
@@ -184,6 +188,14 @@ const spotlight = featured[0];
     .phototaxis {
       grid-template-columns: 1fr;
     }
+  }
+  .pt-video {
+    margin: 0;
+  }
+  .pt-video figcaption {
+    margin-top: 0.7rem;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
   }
   .pt-video video {
     width: 100%;
