@@ -21,7 +21,7 @@ const hardware = (await getCollection("hardware")).sort(
     <SectionHead
       kicker="Resources"
       title="Open protocols, hardware, data, and code"
-      lead="The JUST Lab shares its methods and tools openly. This page is being populated — the sections below show what will live here."
+      lead="The JUST Lab shares its methods and tools openly. Open hardware and protocols are online now; datasets and code will be added as they are released."
     />
   </section>
 
@@ -48,26 +48,6 @@ const hardware = (await getCollection("hardware")).sort(
         </p>
         <span class="go">Browse protocols →</span>
       </a>
-      <div class="card">
-        <h3>Datasets</h3>
-        <p>Published datasets with repository links (Zenodo, OSF).</p>
-        <p class="mono todo">TODO: add dataset DOIs</p>
-      </div>
-      <div class="card">
-        <h3>Software &amp; code</h3>
-        <p>Analysis scripts, vector-design tools, and other code.</p>
-        <p class="mono todo">TODO: add repository links</p>
-      </div>
-      <div class="card">
-        <h3>Strains &amp; plasmids</h3>
-        <p>Availability of strains and plasmids; Addgene links where deposited.</p>
-        <p class="mono todo">TODO</p>
-      </div>
-      <div class="card">
-        <h3>Teaching materials</h3>
-        <p>Course and workshop content.</p>
-        <p class="mono todo">TODO</p>
-      </div>
     </div>
   </section>
 </Base>
@@ -117,9 +97,5 @@ const hardware = (await getCollection("hardware")).sort(
   .go {
     color: var(--accent);
     font-size: 0.9rem;
-  }
-  .todo {
-    color: var(--gold);
-    font-size: 0.66rem;
   }
 </style>

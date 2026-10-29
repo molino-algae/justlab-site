@@ -1,0 +1,10 @@
+# JUST Lab static site (Apache, Hostinger)
+ErrorDocument 404 /404.html
+
+# Old WordPress addresses -> new pages (permanent redirects)
+RedirectMatch 301 ^/projetos/?$ /projects/
+RedirectMatch 301 ^/recursos/?$ /resources/
+RedirectMatch 301 ^/publicacoes/?$ /publications/
+RedirectMatch 301 ^/contato/?$ /contact/
+RedirectMatch 301 ^/linhas-de-pesquisa/?$ /research/
+RedirectMatch 301 ^/infraestrutura/?$ /infrastructure/
