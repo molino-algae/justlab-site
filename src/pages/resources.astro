@@ -25,6 +25,19 @@ const hardware = (await getCollection("hardware")).sort(
     />
   </section>
 
+  <section class="wrap">
+    <h2 class="hw-h">Open hardware</h2>
+    <p class="hw-lead">
+      Seven projects — photobioreactors, light control, sensors and a 3D-printed
+      centrifuge — designed and documented openly, each stating what it has not
+      yet measured.
+      <a href={href("/resources/hardware/")}>See all open hardware →</a>
+    </p>
+    <div class="hw-grid">
+      {hardware.map((item) => <HardwareCard item={item} />)}
+    </div>
+  </section>
+
   <section class="wrap educational" aria-labelledby="games-heading">
     <div class="resource-section-head">
       <span class="mono section-label">Learn through play</span>
@@ -61,19 +74,6 @@ const hardware = (await getCollection("hardware")).sort(
         >
       </div>
     </a>
-  </section>
-
-  <section class="wrap">
-    <h2 class="hw-h">Open hardware</h2>
-    <p class="hw-lead">
-      Seven projects — photobioreactors, light control, sensors and a 3D-printed
-      centrifuge — designed and documented openly, each stating what it has not
-      yet measured.
-      <a href={href("/resources/hardware/")}>See all open hardware →</a>
-    </p>
-    <div class="hw-grid">
-      {hardware.map((item) => <HardwareCard item={item} />)}
-    </div>
   </section>
 
   <section class="wrap">
