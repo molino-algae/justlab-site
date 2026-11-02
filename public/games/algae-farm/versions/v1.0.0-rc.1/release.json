@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0-rc.1",
+  "modelVersion": "0.5.0",
+  "path": "v1.0.0-rc.1/",
+  "originalUrl": "https://candidomolino.github.io/algae-farm/versions/v1.0.0-rc.1/",
+  "sourceBuildMatchesOriginal": true,
+  "automatedChecksPassed": 142,
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 360607,
+      "sha256": "9D95E90E93FB0CDA4CDF059BC8C3AD933D41A170A4A4162F50B29DB070893B81"
+    },
+    {
+      "path": "Algae_Farm_Art_Source.zip",
+      "bytes": 135131,
+      "sha256": "A29D2AA37D3EB8BA2ACA0A361425D1BF72AF1A883BB1E7EA0AC66B1753E075EB"
+    }
+  ]
+}
