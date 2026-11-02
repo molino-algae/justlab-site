@@ -1,0 +1,570 @@
+---
+import Base from "../../layouts/Base.astro";
+import { href } from "../../lib/url";
+
+const currentVersion = "1.0.1";
+const versions = ["1.0.1", "1.0.0", "1.0.0-rc.2", "1.0.0-rc.1", "0.8.1"];
+---
+
+<Base
+  title="Algae Farm"
+  description="A browser game for exploring microalgae cultivation, biodiesel, and starch or whole-biomass bioplastics. Play in Portuguese, at your own pace."
+>
+  <section class="wrap game-hero">
+    <a class="back-link" href={href("/resources/")}>← Resources</a>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="kicker mono">Educational game</span>
+        <h1>Algae Farm</h1>
+        <p class="standfirst">
+          A small algae farm.<br />Big process decisions.
+        </p>
+        <p class="intro">
+          Cultivate microalgae, turn biomass into products, and grow your farm
+          one batch at a time. Experiment with different species and routes to
+          see how your choices shape the result.
+        </p>
+        <ul class="game-tags" aria-label="Game details">
+          <li><span lang="pt-BR">Português (Brasil)</span> · PT-BR</li>
+          <li>Free play</li>
+          <li>Version {currentVersion}</li>
+        </ul>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href={href("/games/algae-farm/")}>
+            Play in Portuguese <span aria-hidden="true">→</span>
+          </a>
+          <a class="learning-link" href="#learning">What can you explore?</a>
+        </div>
+        <p class="play-note">
+          Opens the full-page game in your browser. No installation needed.
+        </p>
+      </div>
+      <figure class="game-preview">
+        <a
+          href={href("/games/algae-farm/preview.jpg")}
+          aria-label="View a full-size screenshot of Algae Farm"
+        >
+          <img
+            src={href("/games/algae-farm/preview.jpg")}
+            alt="Algae Farm in Portuguese, showing the daylight research farm, algae ponds, and controls for a production batch."
+            width="1264"
+            height="1079"
+            decoding="async"
+          />
+        </a>
+        <figcaption>
+          <span class="mono">Inside the farm</span>
+          <span
+            >Gameplay in Portuguese · View full-size <span aria-hidden="true"
+              >↗</span
+            ></span
+          >
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section
+    class="wrap learning"
+    id="learning"
+    aria-labelledby="learning-heading"
+  >
+    <div class="section-intro">
+      <span class="kicker mono">From culture to product</span>
+      <h2 id="learning-heading">Every batch is a new experiment.</h2>
+      <p>
+        Explore the connection between biology, processing, and resource use.
+        Change a decision, run another batch, and compare what happens.
+      </p>
+    </div>
+    <div class="learning-grid">
+      <article>
+        <span class="sequence mono" aria-hidden="true">01 / Culture</span>
+        <h3>Choose your algae</h3>
+        <p>
+          Unlock species with different biomass, lipid, and starch profiles.
+          Compare their strengths before choosing a culture for the next batch.
+        </p>
+      </article>
+      <article>
+        <span class="sequence mono" aria-hidden="true">02 / Process</span>
+        <h3>Follow a product route</h3>
+        <p>
+          Explore lipids-to-biodiesel conversion and bioplastic routes based on
+          starch or whole biomass. Weigh product yield against the processing
+          resources each route needs.
+        </p>
+      </article>
+      <article>
+        <span class="sequence mono" aria-hidden="true">03 / Reinvest</span>
+        <h3>Build a working farm</h3>
+        <p>
+          Balance budget, energy, water, and process turns. Sell batches, earn
+          game coins, and improve your equipment as the farm grows.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap practical" aria-labelledby="practical-heading">
+    <div class="practical-grid">
+      <div>
+        <span class="kicker mono">Play and discuss</span>
+        <h2 id="practical-heading">At your own pace.</h2>
+        <p>
+          Play on a desktop or mobile browser. For a class, introduce the farm
+          and let students explore, repeat batches, and discuss their choices.
+          Free play has no countdown; the process-turn limits belong to the
+          production model.
+        </p>
+        <a class="btn btn-primary" href={href("/games/algae-farm/")}>
+          Enter the farm <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <aside class="model-note" aria-labelledby="model-heading">
+        <span class="mono">A simplified teaching model</span>
+        <h3 id="model-heading">Use the numbers to ask better questions.</h3>
+        <p>
+          Biomass, composition, costs, and product yields are didactic
+          parameters. They have no direct conversion to industrial units or
+          measured performance for a species.
+        </p>
+        <p>
+          The game supports discussion of trade-offs. Its results do not
+          establish the environmental or mechanical properties of a real fuel or
+          material.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="wrap saves" aria-labelledby="saves-heading">
+    <div class="save-panel">
+      <div>
+        <span class="mono">Continuing a game</span>
+        <h2 id="saves-heading">Your farm stays in your browser.</h2>
+      </div>
+      <div>
+        <p>
+          Progress is saved locally in the browser you play in. Use the same
+          browser and device to continue your farm.
+        </p>
+        <p>
+          This site and the original GitHub Pages game have separate saves. An
+          existing farm on the original site does not transfer automatically.
+        </p>
+        <a
+          href="https://candidomolino.github.io/algae-farm/"
+          target="_blank"
+          rel="noopener"
+        >
+          Continue a save on the original site <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap versions" aria-labelledby="versions-heading">
+    <div class="versions-heading">
+      <h2 id="versions-heading">Version archive</h2>
+      <p>
+        Use a versioned link when you want a classroom activity to stay with the
+        same release. Archived campaign releases keep separate progress; the
+        classic version retains its original rules.
+      </p>
+    </div>
+    <ul class="version-list">
+      {
+        versions.map((version) => (
+          <li>
+            <a href={href(`/games/algae-farm/versions/v${version}/`)}>
+              <span class="version-number mono">v{version}</span>
+              <span class="version-description">
+                {version === currentVersion
+                  ? "Current release"
+                  : version === "0.8.1"
+                    ? "Classic · original rules"
+                    : "Archived campaign"}
+              </span>
+              <span class="version-arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="asset-note">
+      <span class="mono">Artwork and editable assets</span>
+      <div>
+        <p>
+          Explore the visual sources behind the farm, with their accompanying
+          attribution and licence information.
+        </p>
+        <a href={href("/games/algae-farm/Algae_Farm_Art_Source.zip")}>
+          Download artwork &amp; editable assets <span class="asset-format"
+            >(ZIP)</span
+          >
+          <span aria-hidden="true"> ↓</span>
+        </a>
+      </div>
+    </div>
+    <p class="resource-return">
+      <a href={href("/resources/")}>← Explore all resources</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .game-hero {
+    padding-bottom: clamp(3rem, 7vw, 5rem);
+  }
+  .back-link {
+    display: inline-block;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+    font-size: 0.9rem;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  h1 {
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 1;
+    margin-bottom: 1.4rem;
+  }
+  .standfirst {
+    font-family: var(--font-display);
+    font-size: clamp(1.55rem, 2.7vw, 2rem);
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+  }
+  .intro {
+    color: var(--ink-soft);
+    max-width: 44ch;
+    font-size: 1rem;
+  }
+  .game-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    list-style: none;
+    padding: 0;
+    margin: 1.6rem 0;
+  }
+  .game-tags li {
+    font-family: var(--font-mono);
+    font-size: 0.61rem;
+    line-height: 1.6;
+    padding: 0.35rem 0.65rem;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--line);
+    border-radius: 99px;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem 1.2rem;
+    margin-top: 1.6rem;
+  }
+  .btn {
+    justify-content: center;
+    min-height: 46px;
+  }
+  .learning-link {
+    font-size: 0.85rem;
+    padding-block: 0.5rem;
+  }
+  .play-note {
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0.85rem 0 0;
+  }
+  .game-preview {
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: 0 20px 55px color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+  .game-preview > a {
+    display: block;
+  }
+  .game-preview img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+  figcaption .mono {
+    color: var(--accent);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+  }
+  .learning,
+  .practical,
+  .saves {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .section-intro {
+    max-width: 64ch;
+  }
+  .section-intro h2,
+  .practical h2 {
+    font-size: clamp(1.9rem, 4vw, 2.75rem);
+  }
+  .section-intro p {
+    color: var(--ink-soft);
+    margin-top: 1.3rem;
+  }
+  .learning-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.8rem;
+    margin-top: 2.3rem;
+  }
+  .learning-grid article {
+    padding-top: 1.3rem;
+    border-top: 1px solid var(--line);
+  }
+  .sequence {
+    display: block;
+    color: var(--accent);
+    font-size: 0.63rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.2rem;
+  }
+  .learning-grid h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.9rem;
+  }
+  .learning-grid p {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  .practical-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 4.5rem);
+    align-items: start;
+  }
+  .practical h2 {
+    margin-bottom: 1.5rem;
+  }
+  .practical-grid > div > p {
+    color: var(--ink-soft);
+    margin-bottom: 1.7rem;
+  }
+  .model-note {
+    padding: clamp(1.5rem, 3vw, 2rem);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .model-note .mono {
+    display: block;
+    color: var(--accent);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.2rem;
+  }
+  .model-note h3 {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  .model-note p {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+  .model-note p:last-child {
+    margin-bottom: 0;
+  }
+  .save-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    padding-block: 2rem;
+    border-block: 1px solid var(--line);
+  }
+  .save-panel .mono {
+    display: block;
+    color: var(--accent);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .save-panel h2 {
+    font-size: clamp(1.7rem, 3vw, 2.2rem);
+    max-width: 16ch;
+  }
+  .save-panel p,
+  .save-panel a {
+    font-size: 0.9rem;
+  }
+  .save-panel p {
+    color: var(--ink-soft);
+  }
+  .versions {
+    padding-top: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .versions-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem 3rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .versions-heading h2 {
+    font-size: 1.65rem;
+  }
+  .versions-heading p {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    max-width: 48ch;
+    margin: 0;
+  }
+  .version-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .version-list a {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.6fr) minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.6rem 1rem;
+    padding: 1rem 0.4rem;
+    border-bottom: 1px solid var(--line);
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .version-list a:hover,
+  .version-list a:focus-visible {
+    background: var(--accent-soft);
+  }
+  .version-number {
+    color: var(--accent);
+    font-size: 0.73rem;
+    letter-spacing: 0.05em;
+    text-transform: none;
+  }
+  .version-description {
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+  }
+  .version-arrow {
+    color: var(--accent);
+  }
+  .resource-return {
+    margin: 2.5rem 0 0;
+    font-size: 0.9rem;
+  }
+  .asset-note {
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr);
+    gap: 1rem 2rem;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .asset-note .mono {
+    color: var(--accent);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    line-height: 1.7;
+  }
+  .asset-note p,
+  .asset-note a {
+    font-size: 0.85rem;
+  }
+  .asset-note p {
+    color: var(--ink-soft);
+    margin-bottom: 0.5rem;
+  }
+  .asset-format {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+  @media (min-width: 801px) {
+    .game-hero {
+      padding-top: clamp(3rem, 5vw, 4rem);
+    }
+    .back-link {
+      margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    }
+  }
+  @media (max-width: 800px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero-copy {
+      max-width: 42rem;
+    }
+    .game-preview {
+      max-width: 42rem;
+    }
+    .learning-grid {
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+    }
+    .learning-grid article {
+      max-width: 62ch;
+    }
+    .practical-grid,
+    .save-panel,
+    .asset-note {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 480px) {
+    .hero-actions {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+    .hero-actions .btn {
+      width: 100%;
+    }
+    .version-list a {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .version-description {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .version-arrow {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: center;
+    }
+    .game-tags {
+      gap: 0.5rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .version-list a {
+      transition: none;
+    }
+  }
+</style>

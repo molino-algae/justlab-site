@@ -15,22 +15,60 @@ const hardware = (await getCollection("hardware")).sort(
 
 <Base
   title="Resources"
-  description="Protocols, open hardware, datasets, and code from the JUST Lab."
+  description="Educational games, protocols, open hardware, datasets, and code from the JUST Lab."
 >
   <section class="wrap">
     <SectionHead
       kicker="Resources"
-      title="Open protocols, hardware, data, and code"
-      lead="The JUST Lab shares its methods and tools openly. Open hardware and protocols are online now; datasets and code will be added as they are released."
+      title="Tools for research and learning"
+      lead="Explore educational games, open hardware, and published protocols from the JUST Lab. Datasets and code will be added as they are released."
     />
+  </section>
+
+  <section class="wrap educational" aria-labelledby="games-heading">
+    <div class="resource-section-head">
+      <span class="mono section-label">Learn through play</span>
+      <h2 id="games-heading">Educational games</h2>
+      <p>
+        Interactive tools for exploring biological processes and the choices
+        behind them.
+      </p>
+    </div>
+    <a class="game-card" href={href("/resources/algae-farm/")}>
+      <div class="game-media">
+        <img
+          src={href("/games/algae-farm/preview.jpg")}
+          alt="Algae Farm game interface with its cultivation ponds, processing stations, and batch controls."
+          width="1264"
+          height="1079"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="game-body">
+        <div class="game-meta mono">
+          <span>Browser game</span>
+          <span>Portuguese · PT-BR</span>
+        </div>
+        <h3>Algae Farm</h3>
+        <p>
+          Grow microalgae, choose a route to biodiesel or bioplastic, and build
+          a farm one batch at a time. Compare species, balance resources, and
+          reinvest your earnings as you play.
+        </p>
+        <span class="game-go"
+          >Explore the game <span aria-hidden="true">→</span></span
+        >
+      </div>
+    </a>
   </section>
 
   <section class="wrap">
     <h2 class="hw-h">Open hardware</h2>
     <p class="hw-lead">
       Seven projects — photobioreactors, light control, sensors and a 3D-printed
-      centrifuge — designed and documented openly, each stating what it has not yet
-      measured.
+      centrifuge — designed and documented openly, each stating what it has not
+      yet measured.
       <a href={href("/resources/hardware/")}>See all open hardware →</a>
     </p>
     <div class="hw-grid">
@@ -53,6 +91,92 @@ const hardware = (await getCollection("hardware")).sort(
 </Base>
 
 <style>
+  .educational {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .resource-section-head {
+    margin-bottom: 1.6rem;
+  }
+  .section-label {
+    display: block;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .resource-section-head h2 {
+    font-size: clamp(1.65rem, 3vw, 2.2rem);
+  }
+  .resource-section-head p {
+    color: var(--ink-soft);
+    margin-top: 0.7rem;
+    max-width: 62ch;
+  }
+  .game-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    transition:
+      border-color 0.2s,
+      transform 0.2s var(--ease);
+  }
+  .game-card:hover,
+  .game-card:focus-visible {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .game-media {
+    min-width: 0;
+    min-height: 300px;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+  .game-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% 60%;
+  }
+  .game-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: clamp(1.5rem, 3.5vw, 2.6rem);
+    min-width: 0;
+  }
+  .game-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    color: var(--accent);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.1rem;
+  }
+  .game-body h3 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin-bottom: 1rem;
+  }
+  .game-body p {
+    color: var(--ink-soft);
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+  .game-go {
+    display: inline-flex;
+    gap: 0.8rem;
+    align-items: center;
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
   .hw-h {
     font-size: 1.4rem;
   }
@@ -97,5 +221,26 @@ const hardware = (await getCollection("hardware")).sort(
   .go {
     color: var(--accent);
     font-size: 0.9rem;
+  }
+  @media (max-width: 700px) {
+    .game-card {
+      grid-template-columns: 1fr;
+    }
+    .game-media {
+      min-height: 0;
+      aspect-ratio: 16 / 11;
+    }
+    .game-body {
+      padding: 1.5rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .game-card {
+      transition: none;
+    }
+    .game-card:hover,
+    .game-card:focus-visible {
+      transform: none;
+    }
   }
 </style>

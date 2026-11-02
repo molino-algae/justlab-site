@@ -31,6 +31,8 @@ Requires Node 20+.
 | Projects | `src/content/projects/*.md` |
 | News posts | `src/content/news/YYYY-MM-DD-slug.md` |
 | Images | `src/assets/` (optimised at build) |
+| Algae Farm introduction | `src/pages/resources/algae-farm.astro` |
+| Algae Farm game and preserved releases | `public/games/algae-farm/` |
 | Design tokens | `src/styles/tokens.css` |
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to add yourself or a news post.
@@ -52,3 +54,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to add yourself or a news post.
 Drive folder so lab members can edit without GitHub. Run it on the machine with
 `G:` mounted. Set `JL_DRIVE` if the path differs from the default in
 `scripts/sync-content.mjs`.
+
+## Algae Farm
+
+The Resources page includes the Algae Farm educational game. Its introduction is at `/resources/algae-farm/` and standalone play at `/games/algae-farm/` (both receive the `/justlab-site/` prefix on Pages). Version 1.0.1 and five preserved game releases are mirrored as verified public artifacts. See [docs/algae-farm.md](docs/algae-farm.md) for updating the mirror, source checksums, classroom context and browser-local save behavior.
