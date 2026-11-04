@@ -1,38 +1,13 @@
-# Painel de trajetos · JUSTLAB
+# JUSTLAB — Mobilidade ao campus
 
-Interface pública: https://molino-algae.github.io/justlab-site/commute/
+Formulário anônimo, painel ao vivo, estimativas pessoais e histórico de coletas.
 
-O arquivo `source.zip` contém o projeto completo, incluindo interface React,
-API do Worker, esquema e migrações do D1, testes e licenças dos componentes.
-Dados de estudantes, arquivos de execução locais e credenciais não fazem parte
-do pacote. O endereço público da API está em `app/lib/client.ts`.
+O GitHub Pages serve a interface em https://molino-algae.github.io/justlab-site/commute/ . A API e o banco compartilhado continuam no serviço JUSTLAB existente. O formulário e o painel também estão em https://justlab-live-commute.pairedmalt.chatgpt.site/ .
 
-## Reconstruir a interface
+A versão atual usa o logo oficial e de 0 a 14 trajetos de ida ou volta por semana. Ida e volta podem ter transportes diferentes. A distância é de um trajeto; não se duplica novamente. Respostas antigas por dias continuam preservadas. O painel compara a soma dos passageiro-km com referências de avião e informa os fatores e limites do cálculo.
 
-1. Extraia `source.zip` em uma pasta de trabalho.
-2. Use Node.js 22.13 ou mais recente e execute `npm ci` na raiz do projeto.
-3. Execute `node scripts/build-pages.mjs`.
-4. Copie o conteúdo de `outputs/github-pages/commute/` para `public/commute/`
-   do repositório Astro `justlab-site`, mantendo `index.html` e `assets/` juntos.
-5. Publique o site Astro pelo fluxo de GitHub Pages já usado pelo repositório.
+Na apresentação dedicada, Enquete → Salvar e iniciar nova enquete fecha a atual, mantém o histórico e cria um novo QR. O link de gestão do professor é necessário; somente o formulário anônimo deve ser compartilhado com estudantes.
 
-A entrada estática fica em `github-client/`; sua configuração é
-`vite.pages.config.ts`. O caminho público é `/justlab-site/commute/`.
+`source.zip` contém fontes, migrações, testes e ferramentas de construção, sem credenciais, banco de dados ou arquivos locais. A identidade do serviço foi removida de `.openai/hosting.json`; uma cópia nova precisa de um serviço próprio para as rotas da API e um banco D1. Não aponte uma cópia de teste para o banco de produção.
 
-## API e banco de dados
-
-O GitHub Pages serve a interface. A API compartilhada continua no Worker
-existente, com os registros no D1. Alterações no backend e suas migrações devem
-seguir o fluxo de publicação do Sites descrito no projeto; a compilação estática
-não publica nem substitui esse serviço.
-
-A API deve permitir a origem `https://molino-algae.github.io`. Credenciais e
-tokens de gestão continuam fora do código público. Não crie outro serviço nem
-substitua a identidade do serviço existente para reconstruir apenas a interface.
-
-## Histórico por data de coleta
-
-As respostas e o histórico diário permanecem no D1. O painel consulta essas
-coleções pela API. Não salve respostas, exportações CSV, chaves de gestão ou
-histórico de estudantes neste repositório. Uma compilação ou atualização do site
-não deve reiniciar o banco nem apagar as coletas anteriores.
+Para reconstruir a interface a partir da fonte: instale as dependências com o instalador do projeto e rode `node scripts/build-pages.mjs`. Publique a saída `outputs/github-pages/commute/` em `public/commute/` deste repositório. Consulte o README incluído na fonte para o modelo de cálculo, limites e publicação do serviço.
